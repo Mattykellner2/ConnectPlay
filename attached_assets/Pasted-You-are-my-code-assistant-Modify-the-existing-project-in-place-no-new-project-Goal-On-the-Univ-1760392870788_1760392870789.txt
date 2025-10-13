@@ -1,0 +1,278 @@
+You are my code assistant. Modify the existing project in place (no new project).
+
+Goal: On the Universities Dashboard page, add a real tabbed experience with 4 tabs — Overview, Guest Speakers, Student Management, Access Codes — wired to routes.
+
+Overview = the current dashboard panels (stats + Recent Speaker Events + Active Student Cohorts).
+
+Guest Speakers = show only a primary “Book New Speaker” button and an empty state (remove dummy people).
+
+Student Management = empty state for cohorts (no dummy classes) with “Create Class” and “Import Roster” buttons.
+
+Access Codes = empty state with “Create New Codes” button.
+
+When data exists in the future, these tabs should display lists in the styles already defined.
+
+Keep the left sidebar exactly as before and ensure all sidebar links work.
+
+0) Routing shape (nested under /universities/dashboard)
+
+Create nested routes so the URL reflects the tab:
+
+/universities/dashboard → Overview (default)
+
+/universities/dashboard/speakers → Guest Speakers
+
+/universities/dashboard/students → Student Management
+
+/universities/dashboard/access-codes → Access Codes
+
+If you already have a router, just add these. If not, assume React Router v6.
+
+1) Tabs UI (shared)
+
+Create src/components/dashboard/Tabs.tsx:
+
+import { NavLink } from "react-router-dom";
+
+type Tab = { to: string; label: string; };
+const tabs: Tab[] = [
+  { to: "/universities/dashboard", label: "Overview" },
+  { to: "/universities/dashboard/speakers", label: "Guest Speakers" },
+  { to: "/universities/dashboard/students", label: "Student Management" },
+  { to: "/universities/dashboard/access-codes", label: "Access Codes" },
+];
+
+export default function Tabs(){
+  return (
+    <div className="tabbar" role="tablist" aria-label="Dashboard sections">
+      {tabs.map(t => (
+        <NavLink
+          key={t.to}
+          to={t.to}
+          end={t.to === "/universities/dashboard"}
+          className={({isActive}) => `tab ${isActive ? "active" : ""}`}
+          role="tab"
+          aria-selected={({isActive}) => (isActive ? "true" : "false") as any}
+        >
+          {t.label}
+        </NavLink>
+      ))}
+    </div>
+  );
+}
+
+
+This uses the .tabbar / .tab styles you already added.
+
+2) Empty-state components (for data-less tabs)
+
+Create src/components/EmptyStates.tsx:
+
+export function EmptySpeakers({onBook}:{onBook:()=>void}){
+  return (
+    <div className="panel" style={{textAlign:"center"}}>
+      <h3>Guest Speaker History</h3>
+      <p style={{color:"#64748B", margin:"8px 0 14px"}}>No speakers yet. Book a speaker to get started.</p>
+      <button className="btn-red" onClick={onBook}>+ Book New Speaker</button>
+    </div>
+  );
+}
+
+export function EmptyStudents({onCreate}:{onCreate:()=>void}){
+  return (
+    <div className="panel" style={{textAlign:"center"}}>
+      <h3>Student Cohort Management</h3>
+      <p style={{color:"#64748B", margin:"8px 0 14px"}}>No cohorts yet. Create your first class.</p>
+      <div style={{display:"flex",gap:10,justifyContent:"center"}}>
+        <button className="btn-red" onClick={onCreate}>+ Create Class</button>
+        <button className="btn-red" onClick={()=>alert("Import flow TBD")}>Import Roster</button>
+      </div>
+    </div>
+  );
+}
+
+export function EmptyAccessCodes({onCreate}:{onCreate:()=>void}){
+  return (
+    <div className="panel" style={{textAlign:"center"}}>
+      <h3>Access Code Management</h3>
+      <p style={{color:"#64748B", margin:"8px 0 14px"}}>No codes yet. Create access codes for your classes.</p>
+      <button className="btn-red" onClick={onCreate}>+ Create New Codes</button>
+    </div>
+  );
+}
+
+3) Tab pages
+
+Create src/pages/dashboard/Overview.tsx (reuse your existing panels — copy from the current Overview content that shows stats + “Recent Speaker Events” + “Active Student Cohorts”). Keep the same JSX you already have. Example skeleton:
+
+import TopHeader from "../../components/dashboard/TopHeader";
+import StatCard from "../../components/dashboard/StatCard";
+
+export default function Overview(){
+  return (
+    <>
+      <TopHeader />
+      <div className="stat-grid">
+        <StatCard label="Active Students"   value="1,847" delta="+127 this semester" iconBg="red" />
+        <StatCard label="Speakers Booked"   value="28"    delta="+8 this month"      iconBg="green" />
+        <StatCard label="Active Cohorts"    value="3"     delta="3 new courses"      iconBg="purple" />
+        <StatCard label="Avg. Engagement"   value="91%"   delta="+5% vs last sem."   iconBg="amber" />
+      </div>
+
+      {/* keep your tab bar outside; Overview just renders the two panels */}
+      <div className="panel-grid">
+        {/* Recent Speaker Events - keep your current 3 rows + red CTA, or keep as-is from previous implementation */}
+        {/* Active Student Cohorts - 3 rows with engagement chips + red CTA */}
+      </div>
+    </>
+  );
+}
+
+
+Create src/pages/dashboard/GuestSpeakers.tsx:
+
+import { EmptySpeakers } from "../../components/EmptyStates";
+
+export default function GuestSpeakers(){
+  return (
+    <>
+      <h2 style={{margin:"10px 0 8px"}}>Guest Speakers</h2>
+      <EmptySpeakers onBook={()=>location.href="/universities/dashboard/speakers/new"} />
+    </>
+  );
+}
+
+
+Create src/pages/dashboard/StudentManagement.tsx:
+
+import { EmptyStudents } from "../../components/EmptyStates";
+
+export default function StudentManagement(){
+  return (
+    <>
+      <h2 style={{margin:"10px 0 8px"}}>Student Management</h2>
+      <EmptyStudents onCreate={()=>location.href="/universities/dashboard/students/new"} />
+    </>
+  );
+}
+
+
+Create src/pages/dashboard/AccessCodes.tsx:
+
+import { EmptyAccessCodes } from "../../components/EmptyStates";
+
+export default function AccessCodes(){
+  return (
+    <>
+      <h2 style={{margin:"10px 0 8px"}}>Access Codes</h2>
+      <EmptyAccessCodes onCreate={()=>location.href="/universities/dashboard/access-codes/new"} />
+    </>
+  );
+}
+
+
+These pages show no dummy data, only the buttons. When real data exists, you can render lists/cards above the empty-state or swap it conditionally.
+
+4) Update the main dashboard page to render Tabs + nested outlet
+
+Edit src/pages/UniversitiesDashboard.tsx to wrap content with the Tabs and an Outlet. Keep the Sidebar. Do not duplicate the header inside each tab — Overview already includes TopHeader; others don’t.
+
+import { Outlet, Routes, Route, Navigate } from "react-router-dom";
+import Sidebar from "../components/dashboard/Sidebar";
+import Tabs from "../components/dashboard/Tabs";
+import "./../styles/dashboard.css";
+
+import Overview from "./dashboard/Overview";
+import GuestSpeakers from "./dashboard/GuestSpeakers";
+import StudentManagement from "./dashboard/StudentManagement";
+import AccessCodes from "./dashboard/AccessCodes";
+
+export default function UniversitiesDashboard(){
+  return (
+    <div className="dashboard-shell">
+      <Sidebar />
+      <main className="main">
+        {/* Tabs are always visible on the dashboard pages */}
+        <Tabs />
+        <div style={{marginTop:14}}>
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  );
+}
+
+/* Nested routing for the tabs (export helper to mount in your app router) */
+export function UniversitiesDashboardRoutes(){
+  return (
+    <Routes>
+      <Route path="/universities/dashboard" element={<UniversitiesDashboard />}>
+        <Route index element={<Overview />} />
+        <Route path="speakers" element={<GuestSpeakers />} />
+        <Route path="students" element={<StudentManagement />} />
+        <Route path="access-codes" element={<AccessCodes />} />
+        {/* optional create flows */}
+        <Route path="speakers/new" element={<div className="panel">Book Speaker Form (TBD)</div>} />
+        <Route path="students/new" element={<div className="panel">Create Class Form (TBD)</div>} />
+        <Route path="access-codes/new" element={<div className="panel">Create Codes Form (TBD)</div>} />
+      </Route>
+
+      {/* back-compat redirects if needed */}
+      <Route path="/universities/dashboard/overview" element={<Navigate to="/universities/dashboard" replace />} />
+    </Routes>
+  );
+}
+
+5) Mount the nested routes in your app router
+
+In your app’s main router file (often src/App.tsx or src/main.tsx), replace your old single route with the nested group:
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { UniversitiesDashboardRoutes } from "./pages/UniversitiesDashboard";
+
+// ...other imports
+
+export default function App(){
+  return (
+    <BrowserRouter>
+      {/* your site navbar here */}
+      <Routes>
+        {/* other site routes */}
+      </Routes>
+
+      {/* Mount dashboard routes separately (keeps URLs exactly as specified) */}
+      <UniversitiesDashboardRoutes />
+    </BrowserRouter>
+  );
+}
+
+
+If you already render everything in one <Routes>, instead just paste the <Route path="/universities/dashboard" …> block into that existing <Routes>.
+
+6) Remove all dummy rows from non-overview tabs
+
+Guest Speakers: no list rows — only “Book New Speaker” button (already handled above).
+
+Student Management: no cohort rows — only the empty state with action buttons.
+
+Access Codes: no code cards — only the empty state with “Create New Codes”.
+
+Keep the Overview panel rows exactly like the Base44 mock you showed.
+
+7) Acceptance checks (must pass)
+
+Clicking each tab changes the URL and shows the correct content instantly.
+
+Sidebar links remain functional and highlight appropriately.
+
+No dummy names/classes/codes appear in Guest Speakers, Student Management, or Access Codes — just the empty states + buttons.
+
+When data is added later, it can render above the empty states without style changes.
+
+8) When done, print:
+
+Files created/edited and one-line summaries.
+
+The exact routes now active.
+
+Confirmation that no dummy data is visible outside of the Overview tab.
