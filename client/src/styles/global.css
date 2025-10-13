@@ -174,9 +174,9 @@ h2 {
 
 /* colorful icon chips (VISIBLE) */
 .icon-chip {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
   display: grid;
   place-items: center;
   margin: 0 auto;
@@ -200,8 +200,8 @@ h2 {
 
 /* SVGs inside chips should be colored, not faded */
 .icon-chip svg {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
 }
 
 .footer {

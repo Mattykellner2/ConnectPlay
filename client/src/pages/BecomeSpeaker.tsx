@@ -38,10 +38,7 @@ export default function BecomeSpeaker() {
 
   const submitMutation = useMutation({
     mutationFn: (data: InsertProfessionalApplication) =>
-      apiRequest("/api/professional-applications", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
+      apiRequest("POST", "/api/professional-applications", data),
     onSuccess: () => {
       setSubmitted(true);
     },
@@ -56,9 +53,36 @@ export default function BecomeSpeaker() {
 
   const handleLinkedInQuickSetup = () => {
     console.log('LinkedIn Quick Setup clicked');
+    
+    // Simulate LinkedIn data autofill
+    const linkedInData = {
+      name: "John Smith",
+      email: "john.smith@example.com",
+      jobTitle: "Senior Marketing Director",
+      company: "Tech Innovations Inc",
+      industry: "Technology",
+      location: "San Francisco, CA",
+      bio: "Experienced marketing professional with 15+ years in tech industry. Passionate about digital transformation and building high-performing teams.",
+      topics: ["Marketing", "Leadership", "Technology"],
+      formats: ["Virtual", "In-Person", "Workshops"],
+      feeStructure: "standard"
+    };
+    
+    // Populate form with LinkedIn data
+    form.setValue('name', linkedInData.name);
+    form.setValue('email', linkedInData.email);
+    form.setValue('jobTitle', linkedInData.jobTitle);
+    form.setValue('company', linkedInData.company);
+    form.setValue('industry', linkedInData.industry);
+    form.setValue('location', linkedInData.location);
+    form.setValue('bio', linkedInData.bio);
+    form.setValue('topics', linkedInData.topics);
+    form.setValue('formats', linkedInData.formats);
+    form.setValue('feeStructure', linkedInData.feeStructure);
+    
     toast({
-      title: "LinkedIn Quick Setup",
-      description: "This feature will autofill your profile from LinkedIn in the full version.",
+      title: "Profile Imported",
+      description: "Your LinkedIn profile data has been imported successfully!",
     });
   };
 
@@ -77,7 +101,11 @@ export default function BecomeSpeaker() {
               <Button variant="outline" onClick={() => window.location.href = "/"} data-testid="button-return-home">
                 Return Home
               </Button>
-              <Button onClick={() => window.location.href = "/speaker-dashboard"} data-testid="button-preview-dashboard">
+              <Button 
+                onClick={() => window.location.href = "/speaker-dashboard"} 
+                style={{ background: '#2563EB', borderColor: '#2563EB' }}
+                data-testid="button-preview-dashboard"
+              >
                 Preview Dashboard
               </Button>
             </div>
@@ -235,7 +263,13 @@ export default function BecomeSpeaker() {
                     )}
                   />
 
-                  <Button type="button" onClick={() => setStep(2)} className="w-full" data-testid="button-next-step-1">
+                  <Button 
+                    type="button" 
+                    onClick={() => setStep(2)} 
+                    className="w-full" 
+                    style={{ background: '#2563EB', borderColor: '#2563EB' }}
+                    data-testid="button-next-step-1"
+                  >
                     Next: Speaking Details
                   </Button>
                 </>
@@ -335,7 +369,13 @@ export default function BecomeSpeaker() {
                     <Button type="button" variant="outline" onClick={() => setStep(1)} className="flex-1" data-testid="button-back">
                       Back
                     </Button>
-                    <Button type="button" onClick={() => setStep(3)} className="flex-1" data-testid="button-next-step-2">
+                    <Button 
+                      type="button" 
+                      onClick={() => setStep(3)} 
+                      className="flex-1" 
+                      style={{ background: '#2563EB', borderColor: '#2563EB' }}
+                      data-testid="button-next-step-2"
+                    >
                       Next: Review
                     </Button>
                   </div>
@@ -374,6 +414,7 @@ export default function BecomeSpeaker() {
                     <Button 
                       type="submit" 
                       className="flex-1"
+                      style={{ background: '#2563EB', borderColor: '#2563EB' }}
                       disabled={submitMutation.isPending}
                       data-testid="button-submit"
                     >

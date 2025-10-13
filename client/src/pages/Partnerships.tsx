@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import Navigation from "@/components/Navigation";
-import PartnershipTierCard from "@/components/PartnershipTierCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,10 +32,7 @@ export default function Partnerships() {
 
   const submitMutation = useMutation({
     mutationFn: (data: InsertUniversityApplication) =>
-      apiRequest("/api/university-applications", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
+      apiRequest("POST", "/api/university-applications", data),
     onSuccess: () => {
       setSubmitted(true);
     },
@@ -48,43 +44,6 @@ export default function Partnerships() {
       });
     },
   });
-
-  const tiers = [
-    {
-      title: "Program Partnership",
-      description: "Ideal for individual programs or departments",
-      features: [
-        "Up to 5 guest speakers per semester",
-        "Basic reporting and analytics",
-        "Email support",
-        "Student access management",
-      ],
-    },
-    {
-      title: "School Partnership",
-      description: "Perfect for individual schools within larger institutions",
-      features: [
-        "Unlimited guest speakers per semester",
-        "Advanced analytics and reporting",
-        "Dedicated account manager",
-        "Custom branding options",
-        "Priority support",
-      ],
-      isPopular: true,
-    },
-    {
-      title: "University Partnership",
-      description: "Comprehensive solution for entire universities",
-      features: [
-        "Everything in School Partnership",
-        "Multi-school coordination",
-        "White-label options",
-        "API access",
-        "Custom integrations",
-        "24/7 premium support",
-      ],
-    },
-  ];
 
   if (submitted) {
     return (
@@ -111,24 +70,12 @@ export default function Partnerships() {
       <Navigation />
       <div className="pt-20">
         <section className="max-w-7xl mx-auto px-6 py-16">
-          <div className="text-center mb-12">
+          <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">University Partnerships</h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Enable scalable access to real-world experts and enhance your students' 
               educational experience with industry-leading professionals
             </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {tiers.map((tier) => (
-              <PartnershipTierCard
-                key={tier.title}
-                {...tier}
-                onSelect={() => {
-                  document.getElementById('demo-form')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              />
-            ))}
           </div>
 
           <div id="demo-form" className="max-w-2xl mx-auto">
@@ -257,6 +204,7 @@ export default function Partnerships() {
                 <Button 
                   type="submit" 
                   className="w-full" 
+                  style={{ background: '#2563EB', borderColor: '#2563EB' }}
                   disabled={submitMutation.isPending}
                   data-testid="button-submit"
                 >

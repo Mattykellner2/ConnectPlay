@@ -5,10 +5,10 @@ export default function Navigation() {
   return (
     <header className="navbar">
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', color: 'inherit' }} data-testid="link-home-logo">
           <ConnectPlayLogo size={36} />
           <div style={{ fontWeight: 800, fontSize: 18 }}>ConnectPlay</div>
-        </div>
+        </a>
         <nav className="navlinks" style={{ display: 'flex', gap: 20 }}>
           <a href="/partnerships" data-testid="link-universities">Universities</a>
           <a href="/become-speaker" data-testid="link-professionals">Industry Professionals</a>

@@ -9,14 +9,16 @@ export default function HowItWorks() {
   ];
   
   return (
-    <section style={{ background: '#fff', padding: '40px 0' }}>
+    <section style={{ background: '#F9FAFB', padding: '80px 0' }}>
       <div className="container">
-        <h2 style={{ textAlign: 'center' }}>How ConnectPlay Works</h2>
-        <div className="grid-4" style={{ marginTop: 28 }}>
+        <h2 style={{ textAlign: 'center', marginBottom: 56, fontSize: 36 }}>How ConnectPlay Works</h2>
+        <div className="grid-4" style={{ gap: 40 }}>
           {items.map(({ title, text, chip, Icon }) => (
             <div key={title} style={{ textAlign: 'center' }} data-testid={`step-${title.charAt(0)}`}>
-              <div className={`icon-chip ${chip}`}><Icon/></div>
-              <div style={{ fontWeight: 700, margin: '10px 0 6px' }}>{title}</div>
+              <div className={`icon-chip ${chip}`} style={{ width: '64px', height: '64px', margin: '0 auto 20px' }}>
+                <Icon/>
+              </div>
+              <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 12 }}>{title}</div>
               <div className="lead" style={{ fontSize: 15 }}>{text}</div>
             </div>
           ))}
