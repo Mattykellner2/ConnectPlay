@@ -8,6 +8,9 @@
   --border: #E5E7EB;
   --primary: #2563EB;
   --primary-700: #1D4ED8;
+  --purple: #7C3AED;
+  --green: #22C55E;
+  --amber: #F59E0B;
 
   --r-sm: 8px;
   --r-md: 12px;
@@ -147,6 +150,38 @@ h2 {
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
   padding: 24px;
+}
+
+/* colorful icon chips (VISIBLE) */
+.icon-chip {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+}
+
+.icon-blue {
+  background: #EFF6FF;
+}
+
+.icon-green {
+  background: #ECFDF5;
+}
+
+.icon-purple {
+  background: #F5F3FF;
+}
+
+.icon-amber {
+  background: #FFFBEB;
+}
+
+/* SVGs inside chips should be colored, not faded */
+.icon-chip svg {
+  width: 24px;
+  height: 24px;
 }
 
 .footer {
