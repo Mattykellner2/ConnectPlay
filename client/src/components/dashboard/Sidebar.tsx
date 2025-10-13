@@ -18,9 +18,10 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <div style={{ width: 28, height: 28, display: 'grid', placeItems: 'center', background: '#2563EB', borderRadius: '6px', fontSize: '16px' }}>C</div>
+        <img src="/brand/connectplay-mark.svg" width={28} height={28} alt="ConnectPlay" />
         <div>ConnectPlay</div>
       </div>
+      <div className="portal-label">University Portal</div>
 
       <div className="section-label">Quick Access</div>
       <Link 
@@ -28,7 +29,7 @@ export default function Sidebar() {
         className={`nav-item ${pathname === "/universities/dashboard/home" ? "active" : ""}`}
         data-testid="nav-home"
       >
-        <Home size={20} />
+        <Home size={18} />
         <span className="label">Home Page</span>
       </Link>
 
@@ -42,7 +43,7 @@ export default function Sidebar() {
             className={`nav-item ${pathname === it.path ? "active" : ""}`}
             data-testid={`nav-${it.label.toLowerCase().replace(/\s+/g, '-')}`}
           >
-            <Icon size={20} />
+            <Icon size={18} />
             <span className="label">{it.label}</span>
           </Link>
         );
