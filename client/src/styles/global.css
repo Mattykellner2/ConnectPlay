@@ -144,6 +144,26 @@ h2 {
   border-color: #CBD5E1;
 }
 
+.btn-purple {
+  background: var(--purple);
+  color: #fff;
+  border-color: var(--purple);
+}
+
+.btn-purple:hover {
+  background: #6D28D9;
+}
+
+.btn-amber {
+  background: var(--amber);
+  color: #fff;
+  border-color: var(--amber);
+}
+
+.btn-amber:hover {
+  background: #D97706;
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
