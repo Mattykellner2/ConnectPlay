@@ -1,3 +1,5 @@
+import { Plus } from "lucide-react";
+
 type Props = { 
   name?: string; 
   title?: string; 
@@ -28,8 +30,10 @@ export default function PartnerHero({ name, title, avatarUrl }: Props) {
           className="btn-primary" 
           onClick={() => (window.location.href = "/universities/partner-dashboard/content/new")}
           data-testid="button-create-content-hero"
+          style={{ display: "flex", alignItems: "center", gap: 8 }}
         >
-          ⧁ Create Content
+          <Plus className="w-4 h-4" />
+          Create Content
         </button>
         <div style={{ height: 36, background: "#ffffff1a", border: '1px solid #ffffff33', borderRadius: 8, minWidth: 120 }} />
       </div>
