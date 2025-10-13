@@ -1,37 +1,27 @@
 :root {
   --font-sans: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  --color-bg: #FFFFFF;
-  --color-surface: #FFFFFF;
-  --color-muted: #F8FAFC;
-  --color-text: #0F172A;
-  --color-text-muted: #475569;
-  --color-border: #E5E7EB;
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --muted: #F8FAFC;
+  --text: #0F172A;
+  --text-muted: #475569;
+  --border: #E5E7EB;
+  --primary: #2563EB;
+  --primary-700: #1D4ED8;
 
-  --color-primary: #2563EB;
-  --color-primary-600: #2563EB;
-  --color-primary-700: #1D4ED8;
-
-  --color-purple: #7C3AED;
-  --color-green: #22C55E;
-  --color-amber: #F59E0B;
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-7: 32px;
-  --space-8: 40px;
-  --space-9: 56px;
-  --space-10: 80px;
-
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+  --s-9: 56px;
+  --s-10: 80px;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, .06);
-  --shadow-md: 0 6px 18px rgba(2, 6, 23, .06);
 }
 
 * {
@@ -45,14 +35,76 @@ html, body, #root {
 body {
   margin: 0;
   font-family: var(--font-sans);
-  color: var(--color-text);
-  background: var(--color-bg);
+  color: var(--text);
+  background: var(--bg);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 1023px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .grid-3, .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+h1 {
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 48px);
+  line-height: 1.1;
+  margin: 0;
+}
+
+h2 {
+  font-weight: 800;
+  font-size: clamp(24px, 4vw, 32px);
+  margin: 0;
+}
+
+.lead {
+  color: var(--text-muted);
+  font-size: 16.5px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+.navlinks a {
+  color: #0F172A;
+  text-decoration: none;
+  font-weight: 600;
+  opacity: .92;
 }
 
 .btn {
@@ -63,100 +115,38 @@ body {
   padding: 12px 18px;
   border-radius: 12px;
   font-weight: 600;
-  text-decoration: none;
   border: 1px solid transparent;
+  background: #fff;
+  color: var(--text);
   cursor: pointer;
-  transition: all 0.2s;
+  text-decoration: none;
 }
 
 .btn-primary {
-  background: var(--color-primary);
+  background: var(--primary);
   color: #fff;
+  border-color: var(--primary);
 }
 
 .btn-primary:hover {
-  background: var(--color-primary-700);
+  background: var(--primary-700);
 }
 
 .btn-outline {
-  background: #fff;
-  border-color: var(--color-border);
-  color: var(--color-text);
+  border-color: var(--border);
 }
 
 .btn-outline:hover {
-  border-color: #CBD5E1;
   background: #F8FAFC;
+  border-color: #CBD5E1;
 }
 
 .card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
   padding: 24px;
-}
-
-h1 {
-  font-weight: 800;
-  font-size: clamp(32px, 5.5vw, 48px);
-  line-height: 1.1;
-  letter-spacing: .2px;
-  margin: 0;
-}
-
-h2 {
-  font-weight: 800;
-  font-size: clamp(24px, 3.5vw, 32px);
-  margin: 0;
-}
-
-h3 {
-  font-weight: 700;
-  font-size: 18px;
-  margin: 0;
-}
-
-.lead {
-  color: var(--color-text-muted);
-  font-size: 18px;
-  line-height: 1.7;
-}
-
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: #fff;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.navlinks a {
-  color: #0F172A;
-  text-decoration: none;
-  font-weight: 600;
-  opacity: .9;
-  transition: opacity 0.2s;
-}
-
-.navlinks a:hover {
-  opacity: 1;
-}
-
-.nav-actions .chip {
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  padding: 8px 14px;
-  font-weight: 600;
-  background: #fff;
-  text-decoration: none;
-  color: var(--color-text);
-  transition: all 0.2s;
-}
-
-.nav-actions .chip:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
 }
 
 .footer {
@@ -169,11 +159,6 @@ h3 {
 .footer a {
   color: #E5E7EB;
   text-decoration: none;
-  transition: color 0.2s;
-}
-
-.footer a:hover {
-  color: #fff;
 }
 
 .footer .muted {

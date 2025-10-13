@@ -1,0 +1,285 @@
+You are my code assistant. Modify the existing project in place. Do not create new projects or add generic frameworks.
+
+Objective
+
+Make the Home page match my Base44 reference (clean light theme) exactly, replacing the current sparse/incorrect layout. Use the specs below; don’t improvise.
+
+Acceptance Rules (all must be true)
+
+White page background, sticky white navbar with bottom hairline.
+
+Hero shows left-aligned H1 “Connecting Universities with Industry Experts” where only Industry Experts is blue #2563EB.
+
+Hero spacing = 28px gap from H1 → paragraph; 0px gap above H1 (no extra top whitespace).
+
+Immediately below hero: 3 cards in one row on desktop (≥1024px), gap 24px; tablet (768–1023px) = 2 cols; mobile = 1 col.
+
+“How ConnectPlay Works” shows 4 evenly spaced steps in one row (desktop) with colored icon tiles (no faded/blank squares).
+
+“Complete Platform…” shows 3 centered features in one row (desktop).
+
+“Trusted by…” shows 4 school names in one row (desktop).
+
+Footer is dark with 4 columns and a copyright line.
+If any rule can’t be met, stop and list TODOs.
+
+1) Global theme + utilities
+
+Create or update src/styles/global.css and ensure it’s imported once (e.g., in src/main.jsx or src/App.jsx with import './styles/global.css').
+
+:root{
+  --font-sans: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --muted: #F8FAFC;
+  --text: #0F172A;
+  --text-muted: #475569;
+  --border: #E5E7EB;
+  --primary: #2563EB;
+  --primary-700: #1D4ED8;
+
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px;
+  --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px; --s-9: 56px; --s-10: 80px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{margin:0;font-family:var(--font-sans);color:var(--text);background:var(--bg)}
+
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+@media (max-width:1023px){.grid-3{grid-template-columns:repeat(2,1fr)}.grid-4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:767px){.grid-3,.grid-4{grid-template-columns:1fr}}
+
+h1{font-weight:800;font-size:clamp(32px,5.5vw,48px);line-height:1.1;margin:0}
+h2{font-weight:800;font-size:clamp(24px,4vw,32px);margin:0}
+.lead{color:var(--text-muted);font-size:16.5px;line-height:1.7;margin:0}
+
+.navbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border)}
+.navlinks a{color:#0F172A;text-decoration:none;font-weight:600;opacity:.92}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:12px;font-weight:600;border:1px solid transparent;background:#fff;color:var(--text);cursor:pointer;text-decoration:none}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-primary:hover{background:var(--primary-700)}
+.btn-outline{border-color:var(--border)}
+.btn-outline:hover{background:#F8FAFC;border-color:#CBD5E1}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-sm);padding:24px}
+
+.footer{background:#0B1220;color:#D1D5DB;padding:56px 0 24px;margin-top:80px}
+.footer a{color:#E5E7EB;text-decoration:none}
+.footer .muted{color:#9CA3AF;font-size:14px}
+
+
+Remove any global dark gradients or top spacer elements. Search for linear-gradient, dark hero backgrounds, or custom “hero” sections and delete/replace.
+
+2) Navbar (exact)
+
+Edit your Nav component (e.g., src/components/Nav.jsx):
+
+export default function Nav(){
+  return (
+    <header className="navbar">
+      <div className="container" style={{display:'flex',alignItems:'center',justifyContent:'space-between',height:64}}>
+        <div style={{fontWeight:800}}>ConnectPlay</div>
+        <nav className="navlinks" style={{display:'flex',gap:20}}>
+          <a href="/universities">Universities</a>
+          <a href="/professionals">Industry Professionals</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+        </nav>
+        <div style={{display:'flex',gap:12}}>
+          <a href="/student-login">Student Login</a>
+          <a className="btn btn-outline" href="/admin-login">Admin Login</a>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+3) Hero (left-aligned, tight)
+
+Edit src/components/Hero.jsx:
+
+export default function Hero(){
+  return (
+    <section style={{background:'#fff',padding:'32px 0 32px'}}>
+      <div className="container" style={{maxWidth:900}}>
+        <h1>
+          Connecting Universities with <span style={{color:'var(--primary)'}}>Industry Experts</span>
+        </h1>
+        <p className="lead" style={{marginTop:28}}>
+          The premier platform for academic-industry partnerships. Universities manage student access, book verified guest speakers, and track engagement outcomes.
+        </p>
+      </div>
+    </section>
+  )
+}
+
+4) Three cards in one row (desktop)
+
+Replace any existing cards section with:
+
+export function HomeCards(){
+  return (
+    <section style={{background:'#fff',padding:'24px 0 40px'}}>
+      <div className="container grid-3">
+        <div className="card">
+          <div style={{width:44,height:44,borderRadius:12,background:'#EFF6FF',marginBottom:12}}/>
+          <h3 style={{margin:'4px 0 8px',fontWeight:700}}>For Universities</h3>
+          <p className="lead">Partner with us to provide your students with access to industry professionals, curated content, and career opportunities at scale.</p>
+          <a className="btn btn-outline" style={{marginTop:16}} href="/universities">University Partnerships</a>
+        </div>
+        <div className="card">
+          <div style={{width:44,height:44,borderRadius:12,background:'#F5F3FF',marginBottom:12}}/>
+          <h3 style={{margin:'4px 0 8px',fontWeight:700}}>Industry Professionals</h3>
+          <p className="lead">Join our network of vetted guest speakers and share your expertise with classes that match your experience.</p>
+          <a className="btn btn-primary" style={{marginTop:16}} href="/professionals">Become a Speaker</a>
+        </div>
+        <div className="card" style={{borderColor:'#FDE68A'}}>
+          <div style={{width:44,height:44,borderRadius:12,background:'#FFFBEB',marginBottom:12}}/>
+          <h3 style={{margin:'4px 0 8px',fontWeight:700}}>Student Access</h3>
+          <p className="lead">Students gain access through their university, use access codes provided by your school to join, and connect with verified experts.</p>
+          <a className="btn btn-outline" style={{marginTop:16}} href="/student-access">Enter Access Code →</a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+5) “How ConnectPlay Works” (4 steps, colored tiles)
+export function HowItWorks(){
+  const items = [
+    {title:'1. University Partners', text:'Universities sign up and choose their partnership package.', bg:'#EFF6FF'},
+    {title:'2. Access Codes',       text:'Universities generate access codes for their students to create accounts.', bg:'#ECFDF5'},
+    {title:'3. Book & Access',      text:'Universities book speakers while students access content and events.', bg:'#EEF2FF'},
+    {title:'4. Track Impact',       text:'Universities track student engagement and program outcomes.', bg:'#FFFBEB'},
+  ];
+  return (
+    <section style={{background:'#fff',padding:'40px 0'}}>
+      <div className="container">
+        <h2 style={{textAlign:'center'}}>How ConnectPlay Works</h2>
+        <div className="grid-4" style={{marginTop:28}}>
+          {items.map((it,i)=>(
+            <div key={i} style={{textAlign:'center'}}>
+              <div style={{width:48,height:48,borderRadius:12,background:it.bg,margin:'0 auto 10px'}}/>
+              <div style={{fontWeight:700,marginBottom:6}}>{it.title}</div>
+              <div className="lead" style={{fontSize:15}}>{it.text}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+6) “Complete Platform…” (3 features)
+export function Features(){
+  const feats = [
+    {title:'Verified Speakers', text:'Curated network of industry professionals across sports, media, and entertainment.', bg:'#EEF2FF'},
+    {title:'Easy Booking', text:'Streamlined booking process with confirmed availability and automated reminders.', bg:'#ECFDF5'},
+    {title:'Measurable Impact', text:'Track attendance, engagement, and student outcomes with detailed reporting.', bg:'#F5F3FF'},
+  ];
+  return (
+    <section style={{background:'#fff',padding:'24px 0 40px'}}>
+      <div className="container">
+        <h2 style={{textAlign:'center'}}>Complete Platform for Academic-Industry Connections</h2>
+        <div className="grid-3" style={{marginTop:28,textAlign:'center'}}>
+          {feats.map((f,i)=>(
+            <div key={i}>
+              <div style={{width:48,height:48,borderRadius:12,background:f.bg,margin:'0 auto 10px'}}/>
+              <div style={{fontWeight:700,marginBottom:6}}>{f.title}</div>
+              <div className="lead" style={{fontSize:15}}>{f.text}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+7) “Trusted by…” (4 names, one row)
+export function LogosBand(){
+  const names=['Stanford','USC','UCLA','NYU'];
+  const subs =['University','Annenberg','Extension','Tisch'];
+  return (
+    <section style={{background:'#fff',padding:'16px 0 40px'}}>
+      <div className="container" style={{textAlign:'center'}}>
+        <h2>Trusted by Leading Institutions</h2>
+        <div className="grid-4" style={{marginTop:24}}>
+          {names.map((n,i)=>(
+            <div key={n} style={{fontWeight:700,color:'#374151'}}>
+              {n}
+              <div style={{fontWeight:500,color:'#9CA3AF',marginTop:6}}>{subs[i]}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+8) Footer (dark, 4 columns)
+export default function Footer(){
+  return (
+    <footer className="footer">
+      <div className="container" style={{display:'grid',gridTemplateColumns:'repeat(4,minmax(0,1fr))',gap:24}}>
+        <div>
+          <div style={{fontWeight:800,color:'#fff'}}>ConnectPlay</div>
+          <p className="muted" style={{marginTop:10}}>Connecting universities with industry professionals for enhanced student learning.</p>
+        </div>
+        <div>
+          <div style={{fontWeight:700,color:'#E5E7EB',marginBottom:8}}>Platform</div>
+          <div><a href="/universities">Universities</a></div>
+          <div><a href="/professionals">Industry Professionals</a></div>
+          <div><a href="/student-access">Student Access</a></div>
+        </div>
+        <div>
+          <div style={{fontWeight:700,color:'#E5E7EB',marginBottom:8}}>Company</div>
+          <div><a href="/about">About Us</a></div>
+          <div><a href="/contact">Contact</a></div>
+          <div><a href="/partner">Partner with Us</a></div>
+        </div>
+        <div>
+          <div style={{fontWeight:700,color:'#E5E7EB',marginBottom:8}}>Support</div>
+          <div><a href="/help">Help Center</a></div>
+          <div><a href="/partnerships">Partnerships</a></div>
+        </div>
+      </div>
+      <div className="container" style={{borderTop:'1px solid rgba(255,255,255,.08)',marginTop:24,paddingTop:16}}>
+        <div className="muted">© 2024 ConnectPlay. All rights reserved.</div>
+      </div>
+    </footer>
+  )
+}
+
+9) Home composition (order matters)
+
+In src/pages/Home.jsx (or src/App.jsx) render exactly:
+
+<>
+  <Nav />
+  <Hero />
+  <HomeCards />
+  <HowItWorks />
+  <Features />
+  <LogosBand />
+  <Footer />
+</>
+
+10) Final checks (enforce)
+
+No extra vertical space above hero.
+
+Hero text block max-width 900px.
+
+Grids collapse per media queries; no horizontal scrolling.
+
+All buttons use .btn variants; no legacy dark styles.
+
+When finished, print:
+
+List of files edited/created with one-line summaries.
+
+Any TODOs you couldn’t complete and why.
