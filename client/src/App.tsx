@@ -14,6 +14,15 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/not-found";
 
+import UniversitiesDashboard from "@/pages/UniversitiesDashboard";
+import DashboardHome from "@/pages/dashboard/DashboardHome";
+import Speakers from "@/pages/dashboard/Speakers";
+import Content from "@/pages/dashboard/Content";
+import Events from "@/pages/dashboard/Events";
+import Messages from "@/pages/dashboard/Messages";
+import Connect from "@/pages/dashboard/Connect";
+import DashboardSettings from "@/pages/dashboard/DashboardSettings";
+
 function Router() {
   return (
     <Switch>
@@ -28,6 +37,16 @@ function Router() {
       <Route path="/student-dashboard" component={StudentDashboard} />
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
+      
+      <Route path="/universities/dashboard" component={UniversitiesDashboard} />
+      <Route path="/universities/dashboard/home" component={DashboardHome} />
+      <Route path="/universities/dashboard/speakers" component={Speakers} />
+      <Route path="/universities/dashboard/content" component={Content} />
+      <Route path="/universities/dashboard/events" component={Events} />
+      <Route path="/universities/dashboard/messages" component={Messages} />
+      <Route path="/universities/dashboard/connect" component={Connect} />
+      <Route path="/universities/dashboard/settings" component={DashboardSettings} />
+      
       <Route component={NotFound} />
     </Switch>
   );
