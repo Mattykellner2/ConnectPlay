@@ -13,9 +13,6 @@ export default function TopHeader() {
           <div className="header-sub">Welcome back, Dr. Jennifer Martinez</div>
         </div>
       </div>
-      <div style={{ opacity: 0.9 }}>
-        <Building2 size={32} />
-      </div>
     </div>
   );
 }
