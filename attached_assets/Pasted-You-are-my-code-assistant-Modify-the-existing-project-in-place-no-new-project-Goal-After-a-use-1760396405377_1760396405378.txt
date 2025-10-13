@@ -1,0 +1,368 @@
+You are my code assistant. Modify the existing project in place (no new project).
+
+Goal: After a user clicks University Partnerships → Sign up → “Continue to Preview Dashboard”, route them to a University Partner Dashboard that matches my Base44 style (dark welcome header with avatar, 4 stat cards, and a tab bar: Overview · Speaking Events · Content Studio · Earnings).
+
+Keep the same colors/format/sections as the screenshots.
+
+Remove all dummy people & numbers. Use placeholders (e.g., “—” or 0) that will automatically be replaced by real user data later.
+
+The header must render “Welcome back, {userName}” and a profile photo spot (avatar placeholder if missing).
+
+Tabs must be fully functional (URL changes).
+
+0) Routing
+
+Use React Router v6. When signup completes, navigate to /universities/partner-dashboard.
+
+In your router, add:
+
+import UniversityPartnerDashboard, { UniversityPartnerDashboardRoutes } from "./pages/UniversityPartnerDashboard";
+
+// mount these somewhere in your <BrowserRouter>
+<UniversityPartnerDashboardRoutes />
+
+
+The tab routes will be:
+
+/universities/partner-dashboard → Overview (default)
+
+/universities/partner-dashboard/speaking → Speaking Events
+
+/universities/partner-dashboard/content → Content Studio
+
+/universities/partner-dashboard/earnings → Earnings
+
+And in the final step of the University Partnerships signup flow:
+
+// on success
+location.href = "/universities/partner-dashboard";
+
+1) Styles (Base44 look & spacing)
+
+Create src/styles/partner.css and import it in UniversityPartnerDashboard.tsx:
+
+:root{
+  --u-bg:#F6F8FB;
+  --u-surface:#FFFFFF;
+  --u-border:#E5E7EB;
+  --u-muted:#64748B;
+  --u-text:#0F172A;
+
+  --u-green:#16A34A;
+  --u-blue:#2563EB;
+  --u-purple:#7C3AED;
+  --u-amber:#F59E0B;
+
+  --u-shadow:0 2px 14px rgba(2,6,23,.06);
+}
+
+/* page shell */
+.u-shell{background:var(--u-bg);min-height:calc(100vh - 64px);padding:22px 24px 40px}
+
+/* dark welcome header */
+.u-hero{
+  background: radial-gradient(1200px 400px at 90% -20%, rgba(255,255,255,.08), transparent) ,
+              linear-gradient(180deg, #101827 0%, #1F2937 100%);
+  color:#fff;border-radius:16px;padding:22px;box-shadow:var(--u-shadow);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.u-hero-left{display:flex;align-items:center;gap:14px}
+.u-hero-avatar{width:56px;height:56px;border-radius:999px;object-fit:cover;background:#111;border:2px solid rgba(255,255,255,.25)}
+.u-hero-title{font-weight:900;font-size:24px;margin:0}
+.u-hero-sub{opacity:.9;font-size:13px;margin-top:2px}
+.u-hero-badge{display:inline-block;margin-top:8px;padding:4px 8px;border-radius:999px;
+  background:#063; color:#C7F9CC; font-weight:800; font-size:12px;}
+
+/* stat cards */
+.u-grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}
+@media (max-width:1100px){.u-grid-4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.u-grid-4{grid-template-columns:1fr}}
+
+.u-stat{background:var(--u-surface);border:1px solid var(--u-border);border-radius:16px;box-shadow:var(--u-shadow);padding:18px}
+.u-stat .icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;margin-bottom:10px}
+.tone-green{background:#D1FAE5;color:#065F46}.tone-blue{background:#DBEAFE;color:#1E40AF}
+.tone-purple{background:#EDE9FE;color:#5B21B6}.tone-amber{background:#FEF3C7;color:#92400E}
+.u-stat .value{font-size:28px;font-weight:900}
+.u-stat .label{color:var(--u-muted);font-weight:700;margin-top:2px}
+.u-stat .sub{color:#9CA3AF;font-size:12px;margin-top:6px}
+
+/* tabs */
+.tabbar{margin-top:14px;background:#EEF2F7;border:1px solid var(--u-border);border-radius:10px;display:flex;padding:6px}
+.tab{flex:1;text-align:center;padding:12px 0;border-radius:8px;font-weight:800;color:#334155;text-decoration:none}
+.tab.active{background:#fff;border:1px solid var(--u-border)}
+
+/* two-column panels */
+.u-two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+@media (max-width:900px){.u-two{grid-template-columns:1fr}}
+
+.panel{background:var(--u-surface);border:1px solid var(--u-border);border-radius:16px;box-shadow:var(--u-shadow);padding:22px}
+.panel h3{margin:0 0 14px 0;font-weight:900;color:var(--u-text)}
+
+/* quick actions */
+.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.q-btn{border:1px solid var(--u-border);border-radius:12px;padding:18px;background:#fff;font-weight:800;display:flex;align-items:center;gap:12px}
+.q-btn:hover{background:#F8FAFC}
+
+/* activity list (placeholder items ok) */
+.activity{display:flex;flex-direction:column;gap:10px}
+.item{background:#fff;border:1px solid var(--u-border);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center}
+.dot{width:10px;height:10px;border-radius:999px;background:#3B82F6;margin-right:10px}
+.meta{color:#9CA3AF;font-size:12px}
+
+/* empty states */
+.empty{background:#fff;border:1px solid var(--u-border);border-radius:16px;box-shadow:var(--u-shadow);padding:26px;text-align:center;color:var(--u-muted)}
+.btn-primary{background:#2563EB;color:#fff;border:none;border-radius:12px;padding:12px 18px;font-weight:900;cursor:pointer}
+.btn-primary:hover{filter:brightness(.95)}
+
+2) Shared components
+
+Create src/components/partner/PartnerTabs.tsx:
+
+import { NavLink } from "react-router-dom";
+export default function PartnerTabs(){
+  const tabs = [
+    { to:"/universities/partner-dashboard", label:"Overview", end:true },
+    { to:"/universities/partner-dashboard/speaking", label:"Speaking Events" },
+    { to:"/universities/partner-dashboard/content", label:"Content Studio" },
+    { to:"/universities/partner-dashboard/earnings", label:"Earnings" },
+  ];
+  return (
+    <div className="tabbar" role="tablist" aria-label="University Partner dashboard">
+      {tabs.map(t=>(
+        <NavLink key={t.to} to={t.to} end={t.end as any} className={({isActive})=>`tab ${isActive ? "active" : ""}`}>{t.label}</NavLink>
+      ))}
+    </div>
+  );
+}
+
+
+Create src/components/partner/PartnerStat.tsx:
+
+type Props = { tone:"green"|"blue"|"purple"|"amber"; value?:string; label:string; sub?:string };
+export default function PartnerStat({tone,value,label,sub}:Props){
+  return (
+    <div className="u-stat">
+      <div className={`icon tone-${tone}`}>★</div>
+      <div className="value">{value ?? "—"}</div>
+      <div className="label">{label}</div>
+      {sub && <div className="sub">{sub}</div>}
+    </div>
+  );
+}
+
+
+Create src/components/partner/PartnerHero.tsx:
+
+// Pull the real name/photo from your auth/user store.
+// Fallbacks ensure the layout renders without real data.
+type Props = { name?: string; title?: string; avatarUrl?: string };
+export default function PartnerHero({name, title, avatarUrl}:Props){
+  const displayName = name || "Your Name";
+  const displayTitle = title || "University Administrator";
+  return (
+    <div className="u-hero">
+      <div className="u-hero-left">
+        <img className="u-hero-avatar" src={avatarUrl || "https://via.placeholder.com/112"} alt="" />
+        <div>
+          <h1 className="u-hero-title">Welcome back, {displayName}</h1>
+          <div className="u-hero-sub">{displayTitle}</div>
+          <span className="u-hero-badge">University Partner</span>
+        </div>
+      </div>
+      <div style={{display:"grid",gap:8,justifyItems:"end"}}>
+        <button className="btn-primary" onClick={()=>location.href="/universities/partner-dashboard/content/new"}>⧁ Create Content</button>
+        <div style={{height:36,background:"#ffffff1a",border:'1px solid #ffffff33',borderRadius:8,minWidth:120}} />
+      </div>
+    </div>
+  );
+}
+
+
+Create src/components/partner/QuickActions.tsx:
+
+export default function QuickActions(){
+  const go = (p:string)=>location.href=p;
+  return (
+    <div className="panel">
+      <h3>Quick Actions</h3>
+      <div className="q-grid">
+        <button className="q-btn" onClick={()=>go("/universities/calendar")}>🗓️ View Calendar</button>
+        <button className="q-btn" onClick={()=>go("/universities/partner-dashboard/content/new")}>📖 Create Content</button>
+        <button className="q-btn" onClick={()=>go("/universities/earnings")}>💲 View Earnings</button>
+        <button className="q-btn" onClick={()=>go("/universities/profile")}>👥 Manage Profile</button>
+      </div>
+    </div>
+  );
+}
+
+
+Create src/components/partner/Activity.tsx (placeholder activity items are OK; data will replace later):
+
+export default function Activity(){
+  const items = [
+    { text:'Your organization enabled Content Studio', time:'Just now' },
+    { text:'No bookings yet — invite industry speakers to connect', time:'—' },
+  ];
+  return (
+    <div className="panel">
+      <h3>Recent Activity</h3>
+      <div className="activity">
+        {items.map((it,i)=>(
+          <div className="item" key={i}>
+            <div style={{display:'flex',alignItems:'center'}}><span className="dot" /><div>{it.text}</div></div>
+            <div className="meta">{it.time}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+3) Page + Tab content
+
+Create src/pages/UniversityPartnerDashboard.tsx:
+
+import "./../styles/partner.css";
+import PartnerTabs from "../components/partner/PartnerTabs";
+import PartnerHero from "../components/partner/PartnerHero";
+import PartnerStat from "../components/partner/PartnerStat";
+import QuickActions from "../components/partner/QuickActions";
+import Activity from "../components/partner/Activity";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+/* Obtain current user info from your auth store if available */
+const currentUser = { name: (window as any)?.userName || "", title: (window as any)?.userTitle || "", avatarUrl: (window as any)?.userAvatar || "" };
+
+/* ------- OVERVIEW ------- */
+function PartnerOverview(){
+  return (
+    <>
+      <PartnerHero name={currentUser.name} title={currentUser.title} avatarUrl={currentUser.avatarUrl} />
+
+      <div className="u-grid-4">
+        <PartnerStat tone="green"  value="—" label="Total Revenue"  sub="+% vs last year" />
+        <PartnerStat tone="blue"   value="—" label="Content Sales"  sub="+ this month" />
+        <PartnerStat tone="purple" value="—" label="Speaking Events" sub="upcoming" />
+        <PartnerStat tone="amber"  value="—" label="Average Rating" sub="feedback" />
+      </div>
+
+      <PartnerTabs />
+
+      <div className="u-two">
+        <QuickActions />
+        <Activity />
+      </div>
+    </>
+  );
+}
+
+/* ------- SPEAKING EVENTS (no dummy rows) ------- */
+function PartnerSpeaking(){
+  return (
+    <>
+      <PartnerHero name={currentUser.name} title={currentUser.title} avatarUrl={currentUser.avatarUrl} />
+      <div className="u-grid-4">
+        <PartnerStat tone="green" label="Total Revenue" />
+        <PartnerStat tone="blue"  label="Content Sales" />
+        <PartnerStat tone="purple" label="Speaking Events" />
+        <PartnerStat tone="amber" label="Average Rating" />
+      </div>
+      <PartnerTabs />
+      <div className="empty">
+        <h3>Upcoming Speaking Events</h3>
+        <p>No events scheduled yet. Create or approve bookings to see them here.</p>
+        <button className="btn-primary" onClick={()=>location.href="/universities/events/new"}>+ Create Event</button>
+      </div>
+    </>
+  );
+}
+
+/* ------- CONTENT STUDIO ------- */
+function PartnerContent(){
+  return (
+    <>
+      <PartnerHero name={currentUser.name} title={currentUser.title} avatarUrl={currentUser.avatarUrl} />
+      <div className="u-grid-4">
+        <PartnerStat tone="green" label="Total Revenue" />
+        <PartnerStat tone="blue"  label="Content Sales" />
+        <PartnerStat tone="purple" label="Speaking Events" />
+        <PartnerStat tone="amber" label="Average Rating" />
+      </div>
+      <PartnerTabs />
+      <div className="empty">
+        <h3>Content Performance</h3>
+        <p>No content yet. Start publishing materials for your university community.</p>
+        <button className="btn-primary" onClick={()=>location.href="/universities/partner-dashboard/content/new"}>+ Create New</button>
+      </div>
+    </>
+  );
+}
+
+/* ------- EARNINGS ------- */
+function PartnerEarnings(){
+  return (
+    <>
+      <PartnerHero name={currentUser.name} title={currentUser.title} avatarUrl={currentUser.avatarUrl} />
+      <div className="u-grid-4">
+        <PartnerStat tone="green" label="Total Revenue" />
+        <PartnerStat tone="blue"  label="Content Sales" />
+        <PartnerStat tone="purple" label="Speaking Events" />
+        <PartnerStat tone="amber" label="Average Rating" />
+      </div>
+      <PartnerTabs />
+      <div className="empty">
+        <h3>Earnings Overview</h3>
+        <p>When transactions occur, earnings and trends will appear here.</p>
+        <button className="btn-primary" onClick={()=>location.href="/universities/earnings"}>View Detailed Analytics</button>
+      </div>
+    </>
+  );
+}
+
+export default function UniversityPartnerDashboard(){ return null; }
+
+/* Mount these routes in your app router */
+export function UniversityPartnerDashboardRoutes(){
+  return (
+    <Routes>
+      <Route path="/universities/partner-dashboard" element={<div className="u-shell"><PartnerOverview /></div>} />
+      <Route path="/universities/partner-dashboard/speaking" element={<div className="u-shell"><PartnerSpeaking /></div>} />
+      <Route path="/universities/partner-dashboard/content" element={<div className="u-shell"><PartnerContent /></div>} />
+      <Route path="/universities/partner-dashboard/earnings" element={<div className="u-shell"><PartnerEarnings /></div>} />
+      <Route path="/universities/dashboard" element={<Navigate to="/universities/partner-dashboard" replace />} />
+    </Routes>
+  );
+}
+
+4) Hook up the CTA after signup
+
+At the completion of the University Partnerships account creation flow, direct the user to the new dashboard:
+
+// replace any old "preview dashboard" link:
+<a className="btn-primary" href="/universities/partner-dashboard">Continue to Preview Dashboard</a>
+// or programmatically:
+location.href = "/universities/partner-dashboard";
+
+5) Final Acceptance (must pass)
+
+After signup → /universities/partner-dashboard shows:
+
+Dark welcome header with avatar and “Welcome back, {userName}”.
+
+4 stat cards in Base44 style (values are “—” or 0 until real data fills in).
+
+Tab bar Overview · Speaking Events · Content Studio · Earnings — active tab highlighted; URL updates.
+
+Overview shows Quick Actions + Recent Activity panels; no fake names/numbers except harmless placeholders.
+
+Speaking Events / Content Studio / Earnings show empty states with buttons only (no dummy rows).
+
+All components use your site fonts/colors and match Base44 spacing.
+
+When finished, print:
+
+Files created/edited with one-line summaries.
+
+The 4 tab routes now active.
+
+Confirmation that no dummy data remains and that the header reads “Welcome back, {userName}” with avatar fallback.
