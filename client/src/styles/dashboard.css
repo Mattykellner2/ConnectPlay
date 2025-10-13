@@ -22,25 +22,29 @@
 }
 
 .sidebar{
-  background:#0B1220;
-  color:#E5EAF6;
+  background:#FFFFFF;
+  color:var(--cp-text);
   padding:16px 14px;
-  border-right:1px solid rgba(255,255,255,.05);
+  border-right:1px solid var(--cp-border);
 }
 .sidebar .brand{
-  display:flex; align-items:center; gap:10px; padding:8px 10px; margin-bottom:10px;
-  font-weight:800; color:#fff;
+  display:flex; align-items:center; gap:10px; padding:8px 10px 2px; margin-bottom:2px;
+  font-weight:800; color:var(--cp-text);
+}
+.sidebar .portal-label{
+  margin-left:52px; margin-top:-2px;
+  font-size:12px; color:#9CA3AF; letter-spacing:.3px;
 }
 .sidebar .section-label{
-  font-size:12px; letter-spacing:.6px; color:#A6B0C3; margin:14px 10px 8px;
+  font-size:12px; letter-spacing:.6px; color:#94A3B8; margin:14px 10px 8px;
   text-transform:uppercase;
 }
 .nav-item{
   display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px;
-  color:#E5EAF6; text-decoration:none; font-weight:600;
+  color:var(--cp-text); text-decoration:none; font-weight:600;
 }
-.nav-item:hover{ background: rgba(255,255,255,.06); }
-.nav-item.active{ background: rgba(37,99,235,.14); color:#fff; }
+.nav-item:hover{ background:#F3F4F6; }
+.nav-item.active{ background:#EEF2FF; border:1px solid #DBEAFE; }
 
 .main{
   padding:20px 22px;
