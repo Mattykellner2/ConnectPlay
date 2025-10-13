@@ -1,0 +1,401 @@
+You are my code assistant. Modify the existing project in place (no new project).
+Goal: Make the Universities Dashboard preview page match my Base44 design exactly, including: left sidebar nav (with icons), a red gradient header card, four stat cards, segmented tabs, and two content panels (“Recent Speaker Events” and “Active Student Cohorts”) with buttons and engagement chips. All sidebar links must navigate.
+
+0) Routing & file plan
+
+Page route for this screen: /universities/dashboard (adjust if you use different routing).
+
+Create/replace these files (TS or JS is fine—match project):
+
+src/styles/dashboard.css
+
+src/components/dashboard/Sidebar.tsx
+
+src/components/dashboard/StatCard.tsx
+
+src/components/dashboard/TopHeader.tsx
+
+src/pages/UniversitiesDashboard.tsx
+
+If you use React Router, ensure this route exists:
+
+<Route path="/universities/dashboard" element={<UniversitiesDashboard />} />
+
+
+Create placeholder pages for sidebar links so navigation works:
+
+/universities/dashboard/home
+
+/universities/dashboard/speakers
+
+/universities/dashboard/content
+
+/universities/dashboard/events
+
+/universities/dashboard/messages
+
+/universities/dashboard/connect
+
+/universities/dashboard/settings
+
+1) Styles (look/feel identical to Base44)
+
+Create or update src/styles/dashboard.css and import it in UniversitiesDashboard.tsx:
+
+:root{
+  --cp-bg:#F5F7FA;
+  --cp-surface:#FFFFFF;
+  --cp-border:#E5E7EB;
+  --cp-muted:#64748B;
+  --cp-text:#0F172A;
+  --cp-shadow:0 2px 14px rgba(2,6,23,.06);
+
+  /* brand + accent used on this screen */
+  --cp-red-600:#9F1C1C;   /* OSU deep red */
+  --cp-red-700:#8A1616;
+  --cp-green-600:#16A34A;
+  --cp-amber-600:#D97706;
+  --cp-purple-600:#7C3AED;
+  --cp-blue-600:#2563EB;
+}
+
+.dashboard-shell{
+  display:grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 64px); /* minus top site navbar if present */
+  background: var(--cp-bg);
+}
+
+.sidebar{
+  background:#0B1220;
+  color:#E5EAF6;
+  padding:16px 14px;
+  border-right:1px solid rgba(255,255,255,.05);
+}
+.sidebar .brand{
+  display:flex; align-items:center; gap:10px; padding:8px 10px; margin-bottom:10px;
+  font-weight:800; color:#fff;
+}
+.sidebar .section-label{
+  font-size:12px; letter-spacing:.6px; color:#A6B0C3; margin:14px 10px 8px;
+  text-transform:uppercase;
+}
+.nav-item{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px;
+  color:#E5EAF6; text-decoration:none; font-weight:600;
+}
+.nav-item:hover{ background: rgba(255,255,255,.06); }
+.nav-item.active{ background: rgba(37,99,235,.14); color:#fff; }
+
+.main{
+  padding:20px 22px;
+}
+
+.header-card{
+  background: linear-gradient(90deg, #A91414, #7A0F0F);
+  color:#fff;
+  border-radius:16px;
+  padding:22px;
+  box-shadow: var(--cp-shadow);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.header-left{ display:flex; align-items:center; gap:14px; }
+.header-badge{
+  width:48px;height:48px;border-radius:10px;background:#fff1;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.18);
+}
+.header-title{ font-weight:900; font-size:22px; line-height:1.15; }
+.header-sub{ opacity:.9; font-size:13px; }
+
+.stat-grid{
+  margin-top:14px;
+  display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:14px;
+}
+.stat{
+  background: var(--cp-surface);
+  border:1px solid var(--cp-border);
+  box-shadow: var(--cp-shadow);
+  border-radius:12px; padding:16px;
+}
+.stat .label{ color:var(--cp-muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+.stat .value{ font-size:24px; font-weight:800; margin-top:6px; }
+.stat .delta{ font-size:12px; margin-left:6px; }
+.stat .icon{
+  width:32px;height:32px;border-radius:8px; display:grid; place-items:center; color:#fff; margin-left:auto;
+}
+.icon-red{ background:var(--cp-red-600) }
+.icon-green{ background:var(--cp-green-600) }
+.icon-purple{ background:var(--cp-purple-600) }
+.icon-amber{ background:var(--cp-amber-600) }
+
+.tabbar{
+  margin-top:14px; background: var(--cp-surface); border:1px solid var(--cp-border);
+  border-radius:10px; display:flex; padding:6px;
+}
+.tab{
+  flex:1; text-align:center; padding:10px 0; border-radius:8px; font-weight:700; color:#475569;
+  cursor:pointer;
+}
+.tab.active{ background:#EEF2FF; color:#1E293B; border:1px solid #DBEAFE; }
+
+.panel-grid{
+  margin-top:14px;
+  display:grid; grid-template-columns: 1fr 1fr; gap:14px;
+}
+.panel{
+  background: var(--cp-surface);
+  border:1px solid var(--cp-border);
+  box-shadow: var(--cp-shadow);
+  border-radius:12px; padding:16px;
+}
+.panel h3{ margin:0 0 8px 0; font-size:16px; font-weight:800; color:var(--cp-text); }
+
+/* list rows */
+.row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 10px; border-radius:10px; border:1px solid var(--cp-border); background:#fff;
+}
+.row + .row{ margin-top:10px; }
+.row .left{ display:flex; flex-direction:column; gap:4px; }
+.row .meta{ color:var(--cp-muted); font-size:12px; }
+.star{ color:#F59E0B; font-weight:800; }
+
+/* buttons + chips */
+.btn-red{
+  background: var(--cp-red-600); color:#fff; border:none; padding:12px 16px;
+  border-radius:10px; font-weight:800; cursor:pointer;
+}
+.btn-red:hover{ background: var(--cp-red-700); }
+
+.chip{
+  padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px;
+  background:#ECFDF5; color:#065F46; border:1px solid #BBF7D0;
+}
+
+@media (max-width: 1024px){
+  .dashboard-shell{ grid-template-columns: 80px 1fr; }
+  .sidebar .label{ display:none }
+  .panel-grid{ grid-template-columns: 1fr; }
+  .stat-grid{ grid-template-columns: repeat(2,1fr) }
+}
+
+2) Sidebar with working links
+
+Create src/components/dashboard/Sidebar.tsx:
+
+import { Link, useLocation } from "react-router-dom";
+
+const items = [
+  { path: "/universities/dashboard/home",     label: "Home Page",       icon: "🏠" },
+  { path: "/universities/dashboard",          label: "Dashboard",       icon: "📊" },
+  { path: "/universities/dashboard/speakers", label: "My Speakers",     icon: "🎤" },
+  { path: "/universities/dashboard/content",  label: "Content Library", icon: "📚" },
+  { path: "/universities/dashboard/events",   label: "Events",          icon: "📅" },
+  { path: "/universities/dashboard/messages", label: "Messages",        icon: "💬" },
+  { path: "/universities/dashboard/connect",  label: "Speaker Connect", icon: "🔗" },
+  { path: "/universities/dashboard/settings", label: "Settings",        icon: "⚙️" },
+];
+
+export default function Sidebar(){
+  const { pathname } = useLocation();
+  return (
+    <aside className="sidebar">
+      <div className="brand">
+        <img src="/brand/connectplay-mark.svg" width={28} height={28} alt="" />
+        <div>ConnectPlay</div>
+      </div>
+
+      <div className="section-label">Quick Access</div>
+      <Link className={`nav-item ${pathname.includes("/home") ? "active" : ""}`} to="/universities/dashboard/home">
+        <span>🏠</span><span className="label">Home Page</span>
+      </Link>
+
+      <div className="section-label">Navigation</div>
+      {items.slice(1).map(it => (
+        <Link key={it.path} to={it.path} className={`nav-item ${pathname === it.path ? "active" : ""}`}>
+          <span>{it.icon}</span><span className="label">{it.label}</span>
+        </Link>
+      ))}
+    </aside>
+  );
+}
+
+
+(If you don’t use React Router, replace <Link> with <a href="…"> and ensure routes exist.)
+
+3) Header (red gradient card)
+
+Create src/components/dashboard/TopHeader.tsx:
+
+export default function TopHeader(){
+  return (
+    <div className="header-card">
+      <div className="header-left">
+        <div className="header-badge">
+          <img src="/brand/connectplay-mark.svg" width={28} height={28} alt="" />
+        </div>
+        <div>
+          <div className="header-title">The Ohio State University</div>
+          <div className="header-sub">Fisher College of Business • University Dashboard</div>
+          <div className="header-sub">Welcome back, Dr. Jennifer Martinez</div>
+        </div>
+      </div>
+      <div style={{opacity:.9}}>🏢</div>
+    </div>
+  );
+}
+
+4) Reusable stat cards
+
+Create src/components/dashboard/StatCard.tsx:
+
+type Props = { label:string; value:string; delta?:string; iconBg:"red"|"green"|"purple"|"amber" };
+
+export default function StatCard({label,value,delta,iconBg}:Props){
+  const map = { red:"icon-red", green:"icon-green", purple:"icon-purple", amber:"icon-amber" } as const;
+  return (
+    <div className="stat">
+      <div style={{display:"flex",alignItems:"center",gap:10}}>
+        <div className={`icon ${map[iconBg]}`}>★</div>
+      </div>
+      <div className="label">{label}</div>
+      <div className="value">{value}{delta && <span className="delta">{delta}</span>}</div>
+    </div>
+  );
+}
+
+5) Dashboard page (layout, tabs, panels)
+
+Create src/pages/UniversitiesDashboard.tsx:
+
+import Sidebar from "../components/dashboard/Sidebar";
+import TopHeader from "../components/dashboard/TopHeader";
+import StatCard from "../components/dashboard/StatCard";
+import "./../styles/dashboard.css";
+
+export default function UniversitiesDashboard(){
+  return (
+    <div className="dashboard-shell">
+      <Sidebar />
+
+      <main className="main">
+        <TopHeader />
+
+        <div className="stat-grid">
+          <StatCard label="Active Students"   value="1,847" delta="+127 this semester" iconBg="red" />
+          <StatCard label="Speakers Booked"   value="28"    delta="+8 this month"      iconBg="green" />
+          <StatCard label="Active Cohorts"    value="3"     delta="3 new courses"      iconBg="purple" />
+          <StatCard label="Avg. Engagement"   value="91%"   delta="+5% vs last sem."   iconBg="amber" />
+        </div>
+
+        <div className="tabbar">
+          <div className="tab active">Overview</div>
+          <div className="tab">Guest Speakers</div>
+          <div className="tab">Student Management</div>
+          <div className="tab">Access Codes</div>
+        </div>
+
+        <div className="panel-grid">
+          {/* Recent Speaker Events */}
+          <section className="panel">
+            <h3>Recent Speaker Events</h3>
+            <div className="row">
+              <div className="left">
+                <strong>Sarah Chen</strong>
+                <div className="meta">ESPN • Sports Marketing 101 • 9/14/2024</div>
+              </div>
+              <div className="star">★ 4.9</div>
+            </div>
+            <div className="row">
+              <div className="left">
+                <strong>Marcus Johnson</strong>
+                <div className="meta">Dallas Cowboys • Communications Workshop • 9/12/2024</div>
+              </div>
+              <div className="star">★ 4.8</div>
+            </div>
+            <div className="row">
+              <div className="left">
+                <strong>Rachel Kim</strong>
+                <div className="meta">Nike • Brand Strategy Panel • 4/4/2024</div>
+              </div>
+              <div className="star">★ 5.0</div>
+            </div>
+            <div style={{marginTop:12}}>
+              <button className="btn-red" onClick={()=>location.href="/universities/dashboard/speakers"}>View All Speakers</button>
+            </div>
+          </section>
+
+          {/* Active Student Cohorts */}
+          <section className="panel">
+            <h3>Active Student Cohorts</h3>
+
+            <div className="row">
+              <div className="left">
+                <strong>Spring 2024 – Sports Management 401</strong>
+                <div className="meta">32 students • Code: OSU-SMGT401-SPR24</div>
+              </div>
+              <span className="chip">94% engaged</span>
+            </div>
+
+            <div className="row">
+              <div className="left">
+                <strong>Marketing Communications 320</strong>
+                <div className="meta">28 students • Code: OSU-MKTG320-SPR24</div>
+              </div>
+              <span className="chip">87% engaged</span>
+            </div>
+
+            <div className="row">
+              <div className="left">
+                <strong>Sports Business Analytics</strong>
+                <div className="meta">24 students • Code: OSU-ANALYTICS-SPR24</div>
+              </div>
+              <span className="chip">92% engaged</span>
+            </div>
+
+            <div style={{marginTop:12}}>
+              <button className="btn-red" onClick={()=>location.href="/universities/dashboard/settings"}>Manage All Cohorts</button>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+6) Wire routes so sidebar buttons work
+
+If you use React Router, add these minimal placeholders so navigation doesn’t break:
+
+<Route path="/universities/dashboard/home" element={<div style={{padding:24}}>Home Page</div>} />
+<Route path="/universities/dashboard/speakers" element={<div style={{padding:24}}>Speakers</div>} />
+<Route path="/universities/dashboard/content" element={<div style={{padding:24}}>Content Library</div>} />
+<Route path="/universities/dashboard/events" element={<div style={{padding:24}}>Events</div>} />
+<Route path="/universities/dashboard/messages" element={<div style={{padding:24}}>Messages</div>} />
+<Route path="/universities/dashboard/connect" element={<div style={{padding:24}}>Speaker Connect</div>} />
+<Route path="/universities/dashboard/settings" element={<div style={{padding:24}}>Settings</div>} />
+
+
+(Place them in your main router where you added /universities/dashboard.)
+
+7) Final acceptance checklist (enforce)
+
+Left dark sidebar with brand row + sections; active item highlighted; all links navigate.
+
+Red gradient header with university name, sublines, right icon; rounded corners and shadow.
+
+Four stat cards in one row with colored icon squares, bold values, deltas beneath.
+
+Tab bar with “Overview” selected style.
+
+Two panels side-by-side: Recent Speaker Events (stars/ratings + red CTA) and Active Student Cohorts (green engagement chips + red CTA).
+
+Visual spacing, radii, shadows, and colors match Base44 screenshot.
+
+When finished, output:
+
+List of files created/edited (one line each).
+
+Confirmation that all sidebar routes are reachable.
+
+Any TODOs you couldn’t complete.

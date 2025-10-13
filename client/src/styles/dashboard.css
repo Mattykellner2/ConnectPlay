@@ -1,0 +1,133 @@
+:root{
+  --cp-bg:#F5F7FA;
+  --cp-surface:#FFFFFF;
+  --cp-border:#E5E7EB;
+  --cp-muted:#64748B;
+  --cp-text:#0F172A;
+  --cp-shadow:0 2px 14px rgba(2,6,23,.06);
+
+  --cp-red-600:#9F1C1C;
+  --cp-red-700:#8A1616;
+  --cp-green-600:#16A34A;
+  --cp-amber-600:#D97706;
+  --cp-purple-600:#7C3AED;
+  --cp-blue-600:#2563EB;
+}
+
+.dashboard-shell{
+  display:grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 64px);
+  background: var(--cp-bg);
+}
+
+.sidebar{
+  background:#0B1220;
+  color:#E5EAF6;
+  padding:16px 14px;
+  border-right:1px solid rgba(255,255,255,.05);
+}
+.sidebar .brand{
+  display:flex; align-items:center; gap:10px; padding:8px 10px; margin-bottom:10px;
+  font-weight:800; color:#fff;
+}
+.sidebar .section-label{
+  font-size:12px; letter-spacing:.6px; color:#A6B0C3; margin:14px 10px 8px;
+  text-transform:uppercase;
+}
+.nav-item{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px;
+  color:#E5EAF6; text-decoration:none; font-weight:600;
+}
+.nav-item:hover{ background: rgba(255,255,255,.06); }
+.nav-item.active{ background: rgba(37,99,235,.14); color:#fff; }
+
+.main{
+  padding:20px 22px;
+}
+
+.header-card{
+  background: linear-gradient(90deg, #A91414, #7A0F0F);
+  color:#fff;
+  border-radius:16px;
+  padding:22px;
+  box-shadow: var(--cp-shadow);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.header-left{ display:flex; align-items:center; gap:14px; }
+.header-badge{
+  width:48px;height:48px;border-radius:10px;background:#fff1;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.18);
+}
+.header-title{ font-weight:900; font-size:22px; line-height:1.15; }
+.header-sub{ opacity:.9; font-size:13px; }
+
+.stat-grid{
+  margin-top:14px;
+  display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:14px;
+}
+.stat{
+  background: var(--cp-surface);
+  border:1px solid var(--cp-border);
+  box-shadow: var(--cp-shadow);
+  border-radius:12px; padding:16px;
+}
+.stat .label{ color:var(--cp-muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+.stat .value{ font-size:24px; font-weight:800; margin-top:6px; }
+.stat .delta{ font-size:12px; margin-left:6px; }
+.stat .icon{
+  width:32px;height:32px;border-radius:8px; display:grid; place-items:center; color:#fff; margin-left:auto;
+}
+.icon-red{ background:var(--cp-red-600) }
+.icon-green{ background:var(--cp-green-600) }
+.icon-purple{ background:var(--cp-purple-600) }
+.icon-amber{ background:var(--cp-amber-600) }
+
+.tabbar{
+  margin-top:14px; background: var(--cp-surface); border:1px solid var(--cp-border);
+  border-radius:10px; display:flex; padding:6px;
+}
+.tab{
+  flex:1; text-align:center; padding:10px 0; border-radius:8px; font-weight:700; color:#475569;
+  cursor:pointer;
+}
+.tab.active{ background:#EEF2FF; color:#1E293B; border:1px solid #DBEAFE; }
+
+.panel-grid{
+  margin-top:14px;
+  display:grid; grid-template-columns: 1fr 1fr; gap:14px;
+}
+.panel{
+  background: var(--cp-surface);
+  border:1px solid var(--cp-border);
+  box-shadow: var(--cp-shadow);
+  border-radius:12px; padding:16px;
+}
+.panel h3{ margin:0 0 8px 0; font-size:16px; font-weight:800; color:var(--cp-text); }
+
+.row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 10px; border-radius:10px; border:1px solid var(--cp-border); background:#fff;
+}
+.row + .row{ margin-top:10px; }
+.row .left{ display:flex; flex-direction:column; gap:4px; }
+.row .meta{ color:var(--cp-muted); font-size:12px; }
+.star{ color:#F59E0B; font-weight:800; }
+
+.btn-red{
+  background: var(--cp-red-600); color:#fff; border:none; padding:12px 16px;
+  border-radius:10px; font-weight:800; cursor:pointer;
+}
+.btn-red:hover{ background: var(--cp-red-700); }
+
+.chip{
+  padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px;
+  background:#ECFDF5; color:#065F46; border:1px solid #BBF7D0;
+}
+
+@media (max-width: 1024px){
+  .dashboard-shell{ grid-template-columns: 80px 1fr; }
+  .sidebar .label{ display:none }
+  .panel-grid{ grid-template-columns: 1fr; }
+  .stat-grid{ grid-template-columns: repeat(2,1fr) }
+}
