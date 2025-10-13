@@ -15,6 +15,7 @@ import Contact from "@/pages/Contact";
 import NotFound from "@/pages/not-found";
 
 import UniversitiesDashboard from "@/pages/UniversitiesDashboard";
+import SpeakersDashboard from "@/pages/SpeakersDashboard";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
 import Content from "@/pages/dashboard/Content";
 import Events from "@/pages/dashboard/Events";
@@ -53,6 +54,12 @@ function Router() {
       <Route path="/universities/dashboard/messages" component={Messages} />
       <Route path="/universities/dashboard/connect" component={Connect} />
       <Route path="/universities/dashboard/settings" component={DashboardSettings} />
+      
+      {/* Speakers Dashboard with nested tab routing */}
+      <Route path="/speakers/dashboard" component={SpeakersDashboard} />
+      <Route path="/speakers/dashboard/speaking" component={SpeakersDashboard} />
+      <Route path="/speakers/dashboard/content" component={SpeakersDashboard} />
+      <Route path="/speakers/dashboard/earnings" component={SpeakersDashboard} />
       
       <Route component={NotFound} />
     </Switch>

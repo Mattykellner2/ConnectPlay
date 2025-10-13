@@ -102,11 +102,11 @@ export default function BecomeSpeaker() {
                 Return Home
               </Button>
               <Button 
-                onClick={() => window.location.href = "/speaker-dashboard"} 
+                onClick={() => window.location.href = "/speakers/dashboard"} 
                 style={{ background: '#2563EB', borderColor: '#2563EB' }}
                 data-testid="button-preview-dashboard"
               >
-                Preview Dashboard
+                Continue to Preview Dashboard
               </Button>
             </div>
           </div>
