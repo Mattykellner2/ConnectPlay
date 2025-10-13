@@ -16,6 +16,7 @@ import NotFound from "@/pages/not-found";
 
 import UniversitiesDashboard from "@/pages/UniversitiesDashboard";
 import SpeakersDashboard from "@/pages/SpeakersDashboard";
+import UniversityPartnerDashboard from "@/pages/UniversityPartnerDashboard";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
 import Content from "@/pages/dashboard/Content";
 import Events from "@/pages/dashboard/Events";
@@ -60,6 +61,12 @@ function Router() {
       <Route path="/speakers/dashboard/speaking" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/content" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/earnings" component={SpeakersDashboard} />
+      
+      {/* University Partner Dashboard with nested tab routing */}
+      <Route path="/universities/partner-dashboard" component={UniversityPartnerDashboard} />
+      <Route path="/universities/partner-dashboard/speaking" component={UniversityPartnerDashboard} />
+      <Route path="/universities/partner-dashboard/content" component={UniversityPartnerDashboard} />
+      <Route path="/universities/partner-dashboard/earnings" component={UniversityPartnerDashboard} />
       
       <Route component={NotFound} />
     </Switch>
