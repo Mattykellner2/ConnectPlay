@@ -1,0 +1,339 @@
+You are my code assistant. Modify the existing project in place (no new project).
+
+Goal: When a user chooses “Become a Speaker → Continue to preview dashboard”, send them to a Speaker Dashboard that matches my Base44 design (screenshot provided): light UI, 4 stat cards, tab bar (Overview · Speaking Events · Content Studio · Earnings), and two panels (Quick Actions & Recent Activity).
+Keep all headers/metrics/components, but treat numbers/names as dummy placeholders that will be replaced by real data later.
+
+0) Route & file plan
+
+Route for this screen: /speakers/dashboard
+
+Create/replace:
+
+src/styles/speaker.css
+
+src/components/speaker/SpeakerTabs.tsx
+
+src/components/speaker/SpeakerStatCard.tsx
+
+src/components/speaker/QuickActions.tsx
+
+src/components/speaker/ActivityList.tsx
+
+src/pages/SpeakersDashboard.tsx
+
+If using React Router v6, ensure:
+
+<Route path="/speakers/dashboard" element={<SpeakersDashboard />} />
+
+
+Also make sure your Become a Speaker CTA ultimately navigates to /speakers/dashboard.
+
+1) Styles (match Base44 look)
+
+Create src/styles/speaker.css and import it in SpeakersDashboard.tsx:
+
+:root{
+  --sp-surface:#FFFFFF;
+  --sp-bg:#F6F8FB;
+  --sp-border:#E5E7EB;
+  --sp-muted:#64748B;
+  --sp-text:#0F172A;
+
+  --sp-green:#16A34A;
+  --sp-blue:#2563EB;
+  --sp-purple:#7C3AED;
+  --sp-amber:#F59E0B;
+
+  --sp-shadow:0 2px 14px rgba(2,6,23,.06);
+}
+
+.speaker-shell{
+  background: var(--sp-bg);
+  min-height: calc(100vh - 64px);
+  padding: 22px 24px 40px;
+}
+
+.sp-grid-4{
+  display:grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap:16px;
+}
+@media (max-width: 1100px){ .sp-grid-4{ grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 640px){ .sp-grid-4{ grid-template-columns: 1fr; } }
+
+.stat{
+  background: var(--sp-surface);
+  border: 1px solid var(--sp-border);
+  border-radius: 16px;
+  box-shadow: var(--sp-shadow);
+  padding: 18px 18px 16px;
+}
+.stat .icon{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff;margin-bottom:10px;
+}
+.icon-green{ background: #D1FAE5; color: var(--sp-green); }
+.icon-blue{  background: #DBEAFE; color: var(--sp-blue);  }
+.icon-purple{background: #EDE9FE; color: var(--sp-purple);}
+.icon-amber{ background: #FEF3C7; color: var(--sp-amber); }
+
+.stat .value{ font-size: 28px; font-weight: 900; }
+.stat .label{ color: var(--sp-muted); font-weight: 700; margin-top: 2px; }
+.stat .sub{ color: #9CA3AF; font-size: 12px; margin-top: 6px; }
+
+/* tabs */
+.tabbar{ margin-top: 14px; background: #EEF2F7; border:1px solid var(--sp-border); border-radius: 10px; display:flex; padding:6px; }
+.tab{ flex:1; text-align:center; padding:12px 0; border-radius:8px; font-weight:800; color:#334155; text-decoration:none; }
+.tab.active{ background:#FFFFFF; border:1px solid var(--sp-border); }
+
+/* panels */
+.panel{
+  background: var(--sp-surface);
+  border:1px solid var(--sp-border);
+  border-radius:16px; box-shadow: var(--sp-shadow);
+  padding: 22px;
+}
+.sp-two{
+  display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px;
+}
+@media (max-width: 900px){ .sp-two{ grid-template-columns: 1fr; } }
+
+.panel h3{ margin:0 0 14px 0; font-weight:900; color:var(--sp-text); }
+
+/* quick actions grid */
+.q-act{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.q-btn{
+  border:1px solid var(--sp-border); border-radius:12px; padding:18px;
+  display:flex; align-items:center; gap:12px; font-weight:800; background:#fff; cursor:pointer;
+}
+.q-btn:hover{ background:#F8FAFC; }
+
+/* activity list */
+.activity{ display:flex; flex-direction:column; gap:10px; }
+.activity .item{
+  background:#fff; border:1px solid var(--sp-border); border-radius:12px;
+  padding:14px; display:flex; justify-content:space-between; align-items:center;
+}
+.activity .dot{ width:10px;height:10px;border-radius:999px;background:#3B82F6;margin-right:10px; }
+.activity .meta{ color:#9CA3AF; font-size:12px; }
+
+/* empty states for other tabs */
+.empty{
+  background:#fff; border:1px solid var(--sp-border); border-radius:16px; box-shadow:var(--sp-shadow);
+  padding:26px; text-align:center; color: var(--sp-muted);
+}
+.btn-primary{
+  background: var(--sp-blue); color:#fff; border:none; border-radius:12px; padding:12px 18px; font-weight:900; cursor:pointer;
+}
+.btn-primary:hover{ filter: brightness(.95); }
+
+2) Reusable parts
+
+Create src/components/speaker/SpeakerStatCard.tsx:
+
+type Props = {
+  icon?: React.ReactNode;
+  iconTone: "green" | "blue" | "purple" | "amber";
+  value: string;
+  label: string;
+  sub?: string;
+};
+export default function SpeakerStatCard({icon, iconTone, value, label, sub}:Props){
+  return (
+    <div className="stat">
+      <div className={`icon icon-${iconTone}`}>{icon ?? "$"}</div>
+      <div className="value">{value}</div>
+      <div className="label">{label}</div>
+      {sub && <div className="sub">{sub}</div>}
+    </div>
+  );
+}
+
+
+Create src/components/speaker/SpeakerTabs.tsx:
+
+import { NavLink } from "react-router-dom";
+export default function SpeakerTabs(){
+  const tabs = [
+    { to:"/speakers/dashboard", label:"Overview", end:true },
+    { to:"/speakers/dashboard/speaking", label:"Speaking Events" },
+    { to:"/speakers/dashboard/content", label:"Content Studio" },
+    { to:"/speakers/dashboard/earnings", label:"Earnings" },
+  ];
+  return (
+    <div className="tabbar" role="tablist" aria-label="Speaker dashboard">
+      {tabs.map(t=>(
+        <NavLink key={t.to} to={t.to} end={t.end as any} className={({isActive})=>`tab ${isActive ? "active" : ""}`}>{t.label}</NavLink>
+      ))}
+    </div>
+  );
+}
+
+
+Create src/components/speaker/QuickActions.tsx:
+
+export default function QuickActions(){
+  const go = (p:string)=>location.href=p;
+  return (
+    <div className="panel">
+      <h3>Quick Actions</h3>
+      <div className="q-act">
+        <button className="q-btn" onClick={()=>go("/speakers/calendar")}>🗓️ View Calendar</button>
+        <button className="q-btn" onClick={()=>go("/speakers/content/new")}>📖 Create Content</button>
+        <button className="q-btn" onClick={()=>go("/speakers/earnings")}>💲 View Earnings</button>
+        <button className="q-btn" onClick={()=>go("/speakers/profile")}>👥 Manage Profile</button>
+      </div>
+    </div>
+  );
+}
+
+
+Create src/components/speaker/ActivityList.tsx:
+
+export default function ActivityList(){
+  // Dummy placeholders only; real data will replace these items.
+  const items = [
+    { text:'Alex Johnson purchased "Sponsorship Deck Masterclass"', time:'2 hours ago' },
+    { text:'New speaking request from UCLA Extension', time:'1 day ago' },
+    { text:'New message from Maria Garcia', time:'2 days ago' },
+    { text:'Content "Digital Marketing Playbook" reached 500 views', time:'3 days ago' },
+  ];
+  return (
+    <div className="panel">
+      <h3>Recent Activity</h3>
+      <div className="activity">
+        {items.map((it,i)=>(
+          <div className="item" key={i}>
+            <div style={{display:'flex',alignItems:'center'}}>
+              <span className="dot" />
+              <div>{it.text}</div>
+            </div>
+            <div className="meta">{it.time}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+3) Page – SpeakersDashboard (Overview tab)
+
+Create src/pages/SpeakersDashboard.tsx:
+
+import "./../styles/speaker.css";
+import SpeakerTabs from "../components/speaker/SpeakerTabs";
+import SpeakerStatCard from "../components/speaker/SpeakerStatCard";
+import QuickActions from "../components/speaker/QuickActions";
+import ActivityList from "../components/speaker/ActivityList";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+/* ----- Tab Content Pages ----- */
+
+// Overview
+function SpeakerOverview(){
+  return (
+    <>
+      {/* Stat cards */}
+      <div className="sp-grid-4">
+        <SpeakerStatCard iconTone="green"  value="$12,847" label="Total Revenue"  sub="+23% from last year" />
+        <SpeakerStatCard iconTone="blue"   value="1,943"   label="Content Sales" sub="+156 this month" />
+        <SpeakerStatCard iconTone="purple" value="28"      label="Speaking Events" sub="4 upcoming" />
+        <SpeakerStatCard iconTone="amber"  value="4.9"     label="Average Rating" sub="Excellent feedback" />
+      </div>
+
+      {/* Panels */}
+      <div className="sp-two">
+        <QuickActions />
+        <ActivityList />
+      </div>
+    </>
+  );
+}
+
+// Speaking Events (empty state + CTA only; no dummy rows)
+function SpeakerEvents(){
+  return (
+    <div className="empty">
+      <h3>Speaking Events</h3>
+      <p>No events yet. Create your first event or accept a booking request.</p>
+      <button className="btn-primary" onClick={()=>location.href="/speakers/events/new"}>+ Create Event</button>
+    </div>
+  );
+}
+
+// Content Studio (empty state)
+function SpeakerContent(){
+  return (
+    <div className="empty">
+      <h3>Content Studio</h3>
+      <p>No content yet. Upload your first lesson, workbook, or resource.</p>
+      <button className="btn-primary" onClick={()=>location.href="/speakers/content/new"}>+ Create Content</button>
+    </div>
+  );
+}
+
+// Earnings (empty state)
+function SpeakerEarnings(){
+  return (
+    <div className="empty">
+      <h3>Earnings</h3>
+      <p>When you start selling content or get paid for events, earnings will appear here.</p>
+      <button className="btn-primary" onClick={()=>location.href="/speakers/earnings"}>View Payouts</button>
+    </div>
+  );
+}
+
+/* ----- Page Shell ----- */
+export default function SpeakersDashboard(){
+  return (
+    <div className="speaker-shell">
+      <SpeakerTabs />
+      <div style={{marginTop:14}}>
+        <Routes>
+          <Route index element={<SpeakerOverview />} />
+          <Route path="speaking" element={<SpeakerEvents />} />
+          <Route path="content" element={<SpeakerContent />} />
+          <Route path="earnings" element={<SpeakerEarnings />} />
+          {/* legacy redirect if needed */}
+          <Route path="overview" element={<Navigate to="/speakers/dashboard" replace />} />
+        </Routes>
+      </div>
+    </div>
+  );
+}
+
+4) Hook up navigation from “Become a Speaker”
+
+Wherever your Become a Speaker confirmation/flow ends (e.g., /professionals/register/complete), navigate to the new route:
+
+// after success
+location.href = "/speakers/dashboard";
+
+
+Or with React Router:
+
+import { useNavigate } from "react-router-dom";
+const nav = useNavigate();
+// …
+nav("/speakers/dashboard");
+
+5) Acceptance checks (enforce)
+
+Visiting /speakers/dashboard shows the Overview with 4 stat cards + tab bar + “Quick Actions” and “Recent Activity” panels exactly as styled.
+
+Tabs switch URL and content:
+
+/speakers/dashboard/speaking → empty state + + Create Event button only.
+
+/speakers/dashboard/content → empty state + + Create Content button only.
+
+/speakers/dashboard/earnings → empty state + View Payouts button only.
+
+Numbers/names shown on Overview are placeholders and will be replaced by real user data later.
+
+The CTA from the Become a Speaker flow routes the user directly to /speakers/dashboard.
+
+6) Output (print at the end)
+
+List of files created/edited with one-line summaries.
+
+Confirmation that /speakers/dashboard and all tab routes are active.
+
+Note any TODOs (e.g., wiring real data sources).
