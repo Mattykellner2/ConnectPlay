@@ -16,7 +16,6 @@ import NotFound from "@/pages/not-found";
 
 import UniversitiesDashboard from "@/pages/UniversitiesDashboard";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
-import Speakers from "@/pages/dashboard/Speakers";
 import Content from "@/pages/dashboard/Content";
 import Events from "@/pages/dashboard/Events";
 import Messages from "@/pages/dashboard/Messages";
@@ -38,9 +37,17 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
       
+      {/* Universities Dashboard with nested tab routing */}
       <Route path="/universities/dashboard" component={UniversitiesDashboard} />
+      <Route path="/universities/dashboard/speakers" component={UniversitiesDashboard} />
+      <Route path="/universities/dashboard/students" component={UniversitiesDashboard} />
+      <Route path="/universities/dashboard/access-codes" component={UniversitiesDashboard} />
+      <Route path="/universities/dashboard/speakers/new" component={UniversitiesDashboard} />
+      <Route path="/universities/dashboard/students/new" component={UniversitiesDashboard} />
+      <Route path="/universities/dashboard/access-codes/new" component={UniversitiesDashboard} />
+      
+      {/* Sidebar navigation pages */}
       <Route path="/universities/dashboard/home" component={DashboardHome} />
-      <Route path="/universities/dashboard/speakers" component={Speakers} />
       <Route path="/universities/dashboard/content" component={Content} />
       <Route path="/universities/dashboard/events" component={Events} />
       <Route path="/universities/dashboard/messages" component={Messages} />
