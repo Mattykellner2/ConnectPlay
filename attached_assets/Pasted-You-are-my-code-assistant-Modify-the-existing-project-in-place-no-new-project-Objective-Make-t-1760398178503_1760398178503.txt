@@ -1,0 +1,236 @@
+You are my code assistant. Modify the existing project in place (no new project).
+
+Objective: Make the University Dashboard page in Replit match my Base44 layout exactly—especially the left sidebar (logo, “University Portal” label, Quick Access & Navigation lists), spacing, fonts, icons, and colors. All sidebar items must navigate to working routes. Remove any “Student Portal” text and replace it with “University Portal.”
+
+0) Files to create / update
+
+Create or update these (TS or JS is fine—match the project):
+
+public/brand/connectplay-mark.svg (keep if already present)
+
+src/styles/university-sidebar.css ✅ NEW
+
+src/components/dashboard/UniversitySidebar.tsx ✅ NEW
+
+src/pages/UniversitiesDashboard.tsx (ensure it uses the sidebar; keep existing header, stats, tabs, panels)
+
+Router file (e.g. src/App.tsx or wherever <Routes> live) to ensure routes exist (see section 4)
+
+1) Sidebar styles (Base44 look)
+
+Create src/styles/university-sidebar.css and import it in UniversitiesDashboard.tsx and UniversitySidebar.tsx:
+
+:root{
+  --side-bg:#FFFFFF;
+  --side-border:#E5E7EB;
+  --side-muted:#9CA3AF;
+  --side-text:#0F172A;
+  --side-hover:#F3F4F6;
+  --brand:#0B1220;
+  --accent:#DC2626; /* red accent used elsewhere */
+}
+
+.uni-shell{
+  display:grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 64px);
+  background:#F6F8FB;
+}
+
+/* Sidebar */
+.uni-sidebar{
+  background:var(--side-bg);
+  border-right:1px solid var(--side-border);
+  padding:16px 14px;
+}
+
+.uni-brand{
+  display:flex; align-items:center; gap:10px;
+  padding:8px 10px 2px; margin-bottom:2px;
+}
+.uni-brand .title{
+  font-weight:800; color:var(--side-text);
+}
+.uni-portal{
+  margin-left:52px; margin-top:-2px;
+  font-size:12px; color:var(--side-muted); letter-spacing:.3px;
+}
+
+.uni-section{
+  font-size:12px; letter-spacing:.6px; color:#94A3B8;
+  margin:14px 10px 8px; text-transform:uppercase;
+}
+
+.uni-item{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:10px;
+  text-decoration:none; color:var(--side-text); font-weight:600;
+}
+.uni-item:hover{ background:var(--side-hover); }
+.uni-item.active{
+  background:#EEF2FF; border:1px solid #DBEAFE;
+}
+
+/* Icons */
+.uni-ico{ width:18px; height:18px; display:grid; place-items:center; }
+
+/* Main area */
+.uni-main{ padding:20px 22px; }
+
+/* Ensure existing header/stat/tabs keep their space */
+.uni-main .header-card, .u-hero, .header-card { margin-bottom:8px; }
+
+2) Sidebar component (logo + “University Portal” + links)
+
+Create src/components/dashboard/UniversitySidebar.tsx:
+
+import { Link, useLocation } from "react-router-dom";
+import "../../styles/university-sidebar.css";
+
+/* Simple inline icons that match Base44 weight */
+const I = {
+  home:   "🏠",
+  dash:   "📊",
+  mic:    "🎤",
+  books:  "📚",
+  cal:    "📅",
+  msg:    "💬",
+  link:   "🔗",
+  gear:   "⚙️",
+};
+
+const NAV = {
+  quick:  [{ to:"/universities/dashboard/home", label:"Home Page", icon:I.home }],
+  main: [
+    { to:"/universities/dashboard",            label:"Dashboard",       icon:I.dash },
+    { to:"/universities/dashboard/speakers",   label:"My Speakers",     icon:I.mic },
+    { to:"/universities/dashboard/content",    label:"Content Library", icon:I.books },
+    { to:"/universities/dashboard/events",     label:"Events",          icon:I.cal },
+    { to:"/universities/dashboard/messages",   label:"Messages",        icon:I.msg },
+    { to:"/universities/dashboard/connect",    label:"Speaker Connect", icon:I.link },
+    { to:"/universities/dashboard/settings",   label:"Settings",        icon:I.gear },
+  ]
+};
+
+export default function UniversitySidebar(){
+  const { pathname } = useLocation();
+
+  const Item = ({to,label,icon}:{to:string;label:string;icon:string}) => (
+    <Link to={to} className={`uni-item ${pathname === to ? "active" : ""}`}>
+      <span className="uni-ico" aria-hidden="true">{icon}</span>
+      <span>{label}</span>
+    </Link>
+  );
+
+  return (
+    <aside className="uni-sidebar" aria-label="University navigation">
+      <div className="uni-brand">
+        <img src="/brand/connectplay-mark.svg" width={28} height={28} alt="" />
+        <div className="title">ConnectPlay</div>
+      </div>
+      <div className="uni-portal">University Portal</div>
+
+      <div className="uni-section">Quick Access</div>
+      {NAV.quick.map(it => <Item key={it.to} {...it} />)}
+
+      <div className="uni-section">Navigation</div>
+      {NAV.main.map(it => <Item key={it.to} {...it} />)}
+    </aside>
+  );
+}
+
+
+Uses emojis for crisp, consistent icons (they render well like Base44’s minimal glyphs). If you prefer SVGs, you can swap them later without changing markup.
+
+3) Use the sidebar in the University dashboard shell
+
+Edit src/pages/UniversitiesDashboard.tsx so the sidebar is always visible on this page (keep your header/stats/tabs/panels exactly as you already made them):
+
+import UniversitySidebar from "../components/dashboard/UniversitySidebar";
+import "../styles/university-sidebar.css";
+
+/* If you already export UniversitiesDashboardRoutes, keep it.
+   Just ensure the layout below wraps your existing dashboard content.
+*/
+
+export default function UniversitiesDashboardShell({ children }: { children?: React.ReactNode }){
+  return (
+    <div className="uni-shell">
+      <UniversitySidebar />
+      <main className="uni-main">
+        {children /* render the existing header, stat cards, Tabs, and panels here */}
+      </main>
+    </div>
+  );
+}
+
+
+If your dashboard page is currently a single component that renders the header/stat/tabs/panels, wrap its JSX with <UniversitiesDashboardShell>…</UniversitiesDashboardShell>.
+
+Example (pseudocode for your existing page file):
+
+function UniversitiesDashboardPage(){
+  return (
+    <UniversitiesDashboardShell>
+      {/* keep your red header card, stat cards row, tab bar, and the Overview panels EXACTLY as you already implemented */}
+    </UniversitiesDashboardShell>
+  );
+}
+export default UniversitiesDashboardPage;
+
+4) Make all sidebar routes work (placeholders allowed)
+
+In your main router (e.g., src/App.tsx), ensure these exist so navigation is functional:
+
+import UniversitiesDashboardPage from "./pages/UniversitiesDashboard";
+
+/* Primary dashboard (Overview as default) */
+<Route path="/universities/dashboard" element={<UniversitiesDashboardPage />} />
+
+/* Placeholder pages—replace later with real content */
+<Route path="/universities/dashboard/home" element={<div style={{padding:24}}>Home Page</div>} />
+<Route path="/universities/dashboard/speakers" element={<div style={{padding:24}}>My Speakers</div>} />
+<Route path="/universities/dashboard/content" element={<div style={{padding:24}}>Content Library</div>} />
+<Route path="/universities/dashboard/events" element={<div style={{padding:24}}>Events</div>} />
+<Route path="/universities/dashboard/messages" element={<div style={{padding:24}}>Messages</div>} />
+<Route path="/universities/dashboard/connect" element={<div style={{padding:24}}>Speaker Connect</div>} />
+<Route path="/universities/dashboard/settings" element={<div style={{padding:24}}>Settings</div>} />
+
+
+If you already have nested routes for the tabs (Overview / Guest Speakers / Student Management / Access Codes), keep them as-is; the above are just to satisfy the sidebar items.
+
+5) Replace any “Student Portal” text
+
+Search the codebase and replace with “University Portal”:
+
+In UniversitySidebar.tsx (already set)
+
+Any leftover labels in your old sidebar or headers:
+
+Find: Student Portal
+
+Replace: University Portal
+
+6) Spacing, fonts, and sizes
+
+Your dashboard header, stat cards, and tab bar already follow Base44 from earlier steps. The new sidebar CSS sets the correct padding, label styles, item sizes, and hover/active states to match the Base44 screenshot:
+
+Logo top-left ✅
+
+“University Portal” small label under logo ✅
+
+“Quick Access” and “Navigation” uppercase muted labels ✅
+
+Item font-weight 600 with subtle hover ✅
+
+Active item highlighted (soft blue) ✅
+
+7) Final output (have Replit print)
+
+After applying, print:
+
+Files created/edited with one-line summaries.
+
+Confirmation that the left sidebar shows the logo, University Portal label, and all items under Quick Access & Navigation.
+
+Confirmation that each sidebar item navigates and that the main dashboard content (header, stats, tab bar, and overview panels) still renders as before.
