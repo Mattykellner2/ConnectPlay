@@ -1,0 +1,293 @@
+You are my code assistant. Modify the existing project in place (no new project).
+
+Goal: Make the Events → Ask Me Anything page match my Base44 design with:
+
+Page title + subtitle
+
+Search bar that filters cards live
+
+Three working tabs: Discover AMAs, My RSVPs, My AMAs
+
+Card grid (status pill, title, host row, tags, date/time/attendees, CTA)
+
+A top-right + Host AMA button that routes to a creation page
+
+Use React + CSS only, same routing scheme as the rest of the dashboard.
+
+0) Files to create / update
+
+Create these files (TS or JS—match the project):
+
+src/styles/events.css ✅ new
+
+src/components/events/AmaTabs.tsx ✅ new
+
+src/components/events/AmaCard.tsx ✅ new
+
+src/pages/EventsAma.tsx ✅ new
+
+Update router so /universities/dashboard/events renders <EventsAma />. Create a placeholder page /universities/dashboard/events/new so Host AMA works.
+
+1) Styles (Base44 look)
+
+Create src/styles/events.css and import it in EventsAma.tsx:
+
+:root{
+  --ev-bg:#F7F9FC;
+  --ev-surface:#FFFFFF;
+  --ev-border:#E5E7EB;
+  --ev-muted:#6B7280;
+  --ev-text:#0F172A;
+  --ev-blue:#2563EB;
+  --ev-green:#16A34A;
+  --ev-rose:#DC2626;
+  --ev-shadow:0 4px 16px rgba(2,6,23,.06);
+}
+
+.ev-wrap{ padding:22px 24px 40px; background:var(--ev-bg); min-height:calc(100vh - 64px); }
+.ev-title{ font-size:36px; font-weight:900; margin:0; color:var(--ev-text); }
+.ev-sub{ color:#94A3B8; margin:6px 0 18px; }
+
+.ev-topbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.ev-host{ background:var(--ev-blue); color:#fff; border:none; border-radius:10px; padding:10px 14px; font-weight:900; cursor:pointer; }
+.ev-host:hover{ filter:brightness(.95); }
+
+.ev-searchbar{ background:var(--ev-surface); border:1px solid var(--ev-border); border-radius:14px; padding:12px; box-shadow:var(--ev-shadow); }
+.ev-search{ position:relative; }
+.ev-search input{ width:100%; border:1px solid var(--ev-border); border-radius:10px; padding:12px 14px 12px 42px; font-size:15px; }
+.ev-search .icon{ position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.6 }
+
+.ev-tabs{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin:12px 0 18px; }
+.ev-tab{ display:flex; gap:8px; align-items:center; justify-content:center; background:#F3F4F6; border:1px solid var(--ev-border); border-radius:10px; padding:10px; font-weight:800; color:#334155; cursor:pointer; }
+.ev-tab.active{ background:#fff; border-color:#CBD5E1; }
+
+.ev-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:18px; }
+@media (max-width: 1100px){ .ev-grid{ grid-template-columns: 1fr; } }
+
+.card{ background:#fff; border:1px solid var(--ev-border); border-radius:16px; box-shadow:var(--ev-shadow); padding:16px; display:flex; flex-direction:column; gap:12px; }
+.status{ display:inline-block; font-size:12px; font-weight:900; padding:4px 10px; border-radius:999px; border:1px solid #E5E7EB; background:#EEF2F7; color:#334155; }
+
+.card-title{ font-size:18px; font-weight:900; line-height:1.3; color:var(--ev-text); }
+.host{ display:flex; align-items:center; gap:10px; color:#475569; }
+.host img{ width:32px; height:32px; border-radius:999px; object-fit:cover; background:#E5E7EB; }
+
+.badges{ display:flex; flex-wrap:wrap; gap:8px; }
+.badge{ background:#F3F4F6; border:1px solid var(--ev-border); border-radius:999px; font-size:12px; font-weight:800; padding:4px 8px; }
+
+.meta{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; color:#64748B; font-size:14px; }
+.meta div{ display:flex; align-items:center; gap:8px; }
+
+.cta{ background:#ef4444; color:#fff; border:none; border-radius:10px; padding:12px 16px; font-weight:900; cursor:pointer; width:100%; }
+.cta.secondary{ background:#E5E7EB; color:#111827; }
+
+.empty{ display:grid; place-items:center; color:#94A3B8; padding:60px 10px; }
+.empty .mic{ font-size:44px; opacity:.45; margin-bottom:10px; }
+
+2) Tabs component
+
+Create src/components/events/AmaTabs.tsx:
+
+export type AmaTabKey = "discover" | "rsvps" | "myamas";
+
+export default function AmaTabs({
+  active, counts, onChange
+}:{ active:AmaTabKey; counts?:{rsvps?:number; my?:number}; onChange:(k:AmaTabKey)=>void }){
+  return (
+    <div className="ev-tabs" role="tablist" aria-label="AMA tabs">
+      <button className={`ev-tab ${active==="discover"?"active":""}`} role="tab" aria-selected={active==="discover"} onClick={()=>onChange("discover")}>🔎 Discover AMAs</button>
+      <button className={`ev-tab ${active==="rsvps"?"active":""}`} role="tab" aria-selected={active==="rsvps"} onClick={()=>onChange("rsvps")}>🗓️ My RSVPs{typeof counts?.rsvps==="number" ? ` (${counts?.rsvps})` : ""}</button>
+      <button className={`ev-tab ${active==="myamas"?"active":""}`} role="tab" aria-selected={active==="myamas"} onClick={()=>onChange("myamas")}>🎙️ My AMAs{typeof counts?.my==="number" ? ` (${counts?.my})` : ""}</button>
+    </div>
+  );
+}
+
+3) Card component
+
+Create src/components/events/AmaCard.tsx:
+
+type Ama = {
+  id:string;
+  status:"Upcoming"|"Completed";
+  title:string;
+  host:{ name:string; title:string; avatar?:string };
+  summary:string;
+  tags:string[];
+  date:string;     // e.g., "Apr 15, 2024"
+  time:string;     // e.g., "3:00 PM (75 min)"
+  attendees:string;// "67 registered · 100 max"
+  variant?: "join" | "manage"; // CTA style
+};
+
+export default function AmaCard({ama}:{ama:Ama}){
+  return (
+    <article className="card">
+      <span className="status">{ama.status}</span>
+
+      <div className="card-title">{ama.title}</div>
+
+      <div className="host">
+        <img src={ama.host.avatar || "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=200&auto=format"} alt="" />
+        <div>
+          <div style={{fontWeight:800}}>{ama.host.name}</div>
+          <div style={{fontSize:12, color:"#6B7280"}}>{ama.host.title}</div>
+        </div>
+      </div>
+
+      <div style={{color:"#6B7280"}}>{ama.summary}</div>
+
+      <div className="badges">
+        {ama.tags.map((t,i)=><span key={i} className="badge">{t}</span>)}
+      </div>
+
+      <div className="meta">
+        <div>📅 {ama.date}</div>
+        <div>⏰ {ama.time}</div>
+        <div>👥 {ama.attendees}</div>
+      </div>
+
+      <div>
+        {ama.variant==="manage" ? (
+          <button className="cta secondary" onClick={()=>alert("Manage AMA")}>⚙️ Manage</button>
+        ) : (
+          <button className="cta" onClick={()=>alert("Join meeting")}>↗ Join Meeting</button>
+        )}
+      </div>
+    </article>
+  );
+}
+
+4) Page with search + tabs + filtering
+
+Create src/pages/EventsAma.tsx:
+
+import { useMemo, useState } from "react";
+import "../styles/events.css";
+import AmaTabs, { AmaTabKey } from "../components/events/AmaTabs";
+import AmaCard from "../components/events/AmaCard";
+
+/* Demo data (replace with real data later) */
+const ALL = [
+  {
+    id:"1",
+    status:"Completed",
+    title:"Breaking Into Sports Marketing: From Intern to Director",
+    host:{name:"Sarah Chen", title:"Senior Marketing Director, ESPN"},
+    summary:"Honest discussion about climbing the sports marketing ladder.",
+    tags:["Career Development","Sports Marketing","Networking","+1 more"],
+    date:"Apr 15, 2024",
+    time:"3:00 PM (75 min)",
+    attendees:"67 registered · 100 max",
+    variant:"join",
+  },
+  {
+    id:"2",
+    status:"Completed",
+    title:"Stanford Sports Media Program - Q&A for Prospective Students",
+    host:{name:"Dr. Jennifer Martinez", title:"Professor, Stanford University"},
+    summary:"Learn about curriculum, career outcomes, and admission requirements.",
+    tags:["Education","Graduate Programs","Sports Media"],
+    date:"Apr 10, 2024",
+    time:"1:00 PM (45 min)",
+    attendees:"38 registered · 50 max",
+    variant:"join",
+  },
+];
+
+const RSVPS = [ALL[0]];
+const MYAMAS = [{
+  ...ALL[1],
+  variant:"manage" as const
+}];
+
+export default function EventsAma(){
+  const [tab, setTab] = useState<AmaTabKey>("discover");
+  const [q, setQ] = useState("");
+
+  const source = tab==="discover" ? ALL : tab==="rsvps" ? RSVPS : MYAMAS;
+
+  const list = useMemo(()=>{
+    const term = q.trim().toLowerCase();
+    if (!term) return source;
+    return source.filter(a =>
+      a.title.toLowerCase().includes(term) ||
+      a.summary.toLowerCase().includes(term) ||
+      a.tags.join(" ").toLowerCase().includes(term) ||
+      a.host.name.toLowerCase().includes(term)
+    );
+  },[q, source]);
+
+  return (
+    <div className="ev-wrap">
+      <div className="ev-topbar">
+        <div>
+          <h1 className="ev-title">Ask Me Anything</h1>
+          <div className="ev-sub">Join live sessions with industry experts and thought leaders.</div>
+        </div>
+        <button className="ev-host" onClick={()=>location.href="/universities/dashboard/events/new"}>+ Host AMA</button>
+      </div>
+
+      <div className="ev-searchbar">
+        <div className="ev-search">
+          <span className="icon">🔎</span>
+          <input
+            type="text"
+            placeholder="Search AMAs by topic, host, or keyword..."
+            value={q}
+            onChange={e=>setQ(e.target.value)}
+            aria-label="Search AMAs"
+          />
+        </div>
+      </div>
+
+      <AmaTabs
+        active={tab}
+        counts={{ rsvps: RSVPS.length, my: MYAMAS.length }}
+        onChange={setTab}
+      />
+
+      {list.length === 0 ? (
+        <div className="empty">
+          <div className="mic">🎙️</div>
+          <div style={{fontWeight:900,color:"#475569"}}>No AMAs Found</div>
+          <div>Check back soon for new sessions or adjust your search.</div>
+        </div>
+      ) : (
+        <div className="ev-grid">
+          {list.map(a => <AmaCard key={a.id} ama={a as any} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+5) Router wiring
+
+In your main router file (e.g., src/App.tsx), add:
+
+import EventsAma from "./pages/EventsAma";
+
+<Route path="/universities/dashboard/events" element={<EventsAma />} />
+<Route path="/universities/dashboard/events/new" element={<div style={{padding:24}}>AMA Creation Form (placeholder)</div>} />
+
+
+Ensure your left sidebar Events link points to /universities/dashboard/events.
+
+6) Acceptance checks (must pass)
+
+Top-right + Host AMA button exists and navigates to /universities/dashboard/events/new.
+
+Search bar filters cards as you type.
+
+Tabs Discover AMAs / My RSVPs / My AMAs switch instantly and update the URL content.
+
+Cards display status pill, host row with avatar, tags, date/time/attendees, and a CTA (Join Meeting for discover/RSVPs; Manage for My AMAs).
+
+When a tab has no items, show the No AMAs Found empty state with mic icon.
+
+When finished, print:
+
+Files created/edited with one-line summaries.
+
+Confirmation that /universities/dashboard/events and /universities/dashboard/events/new routes are active.
+
+Confirmation that tabs, search, and Host AMA button work.

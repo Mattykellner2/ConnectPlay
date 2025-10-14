@@ -19,7 +19,8 @@ import SpeakersDashboard from "@/pages/SpeakersDashboard";
 import UniversityPartnerDashboard from "@/pages/UniversityPartnerDashboard";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
 import ContentLibrary from "@/pages/ContentLibrary";
-import Events from "@/pages/dashboard/Events";
+import EventsAma from "@/pages/EventsAma";
+import EventsAmaNew from "@/pages/EventsAmaNew";
 import Messages from "@/pages/dashboard/Messages";
 import Connect from "@/pages/dashboard/Connect";
 import DashboardSettings from "@/pages/dashboard/DashboardSettings";
@@ -51,7 +52,8 @@ function Router() {
       {/* Sidebar navigation pages */}
       <Route path="/universities/dashboard/home" component={DashboardHome} />
       <Route path="/universities/dashboard/content" component={ContentLibrary} />
-      <Route path="/universities/dashboard/events" component={Events} />
+      <Route path="/universities/dashboard/events" component={EventsAma} />
+      <Route path="/universities/dashboard/events/new" component={EventsAmaNew} />
       <Route path="/universities/dashboard/messages" component={Messages} />
       <Route path="/universities/dashboard/connect" component={Connect} />
       <Route path="/universities/dashboard/settings" component={DashboardSettings} />
