@@ -1,0 +1,88 @@
+Make the following updates across the University Portal interface for ConnectPlay, using Base44’s exact layout, styling, spacing, and font hierarchy. Keep all components responsive and consistent with the Base44 color palette and card styling.
+
+📨 1. Messages Page
+
+Path: /universities/messages
+
+Recreate the layout shown in the first screenshot.
+
+Left panel → list of recent conversations with profile photos, names, and latest message preview.
+
+Right panel → active conversation window with alternating chat bubbles (gray = recipient, blue = user).
+
+Include a functional search bar at the top (Search connections...) to filter messages dynamically.
+
+Include a text input and send button (paper-plane icon) at the bottom.
+
+All message data and names should be dummy placeholders that automatically update per logged-in user’s real messages once connected to backend.
+
+Ensure scrolling works smoothly and message timestamps auto-render correctly.
+
+🎤 2. Speaker Connect Page
+
+Path: /universities/speaker-connect
+
+Match the exact layout and styling in the second screenshot.
+
+Top card → “Find Industry Leaders” heading, short description text, and “Browse Speaker Directory” button (orange).
+
+Below → “University Profile” card with editable fields:
+
+Full Name
+
+Title
+
+University Name
+
+Department / School
+
+Program Bio & Needs
+
+Include a Save Profile button with the same dark-navy background and white text as Base44’s version.
+
+All input values shown (Dr. Jennifer Martinez, etc.) are placeholder data and should dynamically pull from each user’s actual stored profile once integrated.
+
+Maintain spacing, padding, and subtle background gradient.
+
+⚙️ 3. Settings Page
+
+Path: /universities/settings
+
+Implement identical layout and functionality to the third screenshot:
+
+Account Information section (photo upload, name, email field → read-only).
+
+Organization section (university name, team members count, and an “Invite & Manage” button).
+
+Notifications section with three toggle switches:
+
+New Messages
+
+New Matches
+
+Booking Confirmations
+(Each switch must persist its on/off state.)
+
+Danger Zone section at the bottom with a red “Delete My Account” button and explanatory text.
+
+Use the same light background, rounded card borders, and shadow effects as the Base44 example.
+
+All displayed names/emails are dummy placeholders that will later render live user data.
+
+All buttons and toggles should be fully functional with placeholder functions for now.
+
+🧩 General Requirements
+
+Maintain global styling consistency (font sizes, spacing, hover states).
+
+All components must remain responsive on desktop and tablet.
+
+Every button, input, and toggle should be functional even if connected to dummy endpoints temporarily.
+
+Ensure the route structure matches:
+
+/universities/messages
+
+/universities/speaker-connect
+
+/universities/settings
