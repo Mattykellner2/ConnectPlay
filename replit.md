@@ -6,14 +6,23 @@ ConnectPlay is a three-sided marketplace platform designed to connect universiti
 
 ## Recent Changes (October 2025)
 
-**University Dashboard Features Implemented**:
+**Industry Professional Features**:
+- **LinkedIn Quick Setup** (`/speakers/settings`): Auto-fill LinkedIn profile data including name, headline, company, location, bio, and skills from LinkedIn URL input. One-click import streamlines professional onboarding.
+- **Open to Networking/Guest Speaking Toggles**: Industry professionals control their availability through settings. Status is displayed publicly across the platform with green badges (networking) and purple badges (speaking).
+- **Speaking Engagement Tracker** (`/speakers/dashboard/speaking`): Complete event management with monthly tracking, filtering by status (upcoming/past), and detailed event cards showing date, location, university, format, audience size, and compensation.
+- **Speaking Leaderboard**: Monthly reset system tracks top speakers with ranking based on total events. Includes rewards placeholder for top performers.
+
+**Professor Dashboard**:
+- **Professor Dashboard** (`/professors/dashboard`): Dedicated dashboard for professor accounts with connection tracking to university, industry professionals, and students. Features classes overview, speaker management, and analytics.
+- **Connection Hierarchy**: Two-level professor system (Admin + Professor) with connection mapping: University ↔ Professor ↔ Student ↔ Professional. Enables comprehensive relationship tracking.
+
+**University Admin Features**:
+- **Professors Management Tab** (`/universities/dashboard/professors`): Complete professor account management including creation form with fields for name, email, department, and access level (Admin/Professor). List view with search, filtering, and action buttons.
 - **Create Class Form** (`/universities/dashboard/students/new`): Complete class creation workflow with fields for class name, academic term, department, course code, instructor, enrollment size, and optional description. Includes Zod validation and toast feedback.
-- **Import Roster Dialog**: Modal dialog accessible from Student Management with two import methods:
-  - CSV Upload: File upload for bulk student imports
-  - Manual Entry: Text area for entering student emails (one per line)
+- **Import Roster Dialog**: Modal dialog accessible from Student Management with two import methods (CSV upload and manual email entry).
 - **Create Access Codes Form** (`/universities/dashboard/access-codes/new`): Batch access code generation with customizable prefix (max 10 chars), quantity selection (10-200 codes), and optional expiry date. Generated codes display in a copyable list with individual and bulk copy functionality.
 
-All university features include comprehensive data-testid attributes for testing and follow the Base44 design system with consistent styling.
+All features include comprehensive data-testid attributes for testing and follow the Base44 design system with consistent styling.
 
 ## User Preferences
 

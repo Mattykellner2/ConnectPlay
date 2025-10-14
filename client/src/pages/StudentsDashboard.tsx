@@ -55,6 +55,8 @@ const dummyPros = [
     tags: ["Marketing", "Brand Strategy"],
     bio: "20+ years experience in brand marketing and consumer insights",
     connectsOpen: true,
+    openToNetworking: true,
+    openToGuestSpeaking: true,
     connectQuestions: [
       { id: "q1", prompt: "What do you hope to learn from me?", required: true },
       { id: "q2", prompt: "Share a link to your LinkedIn profile", required: false },
@@ -69,6 +71,8 @@ const dummyPros = [
     tags: ["Operations", "Partnerships"],
     bio: "Expert in scaling operations and building strategic partnerships",
     connectsOpen: true,
+    openToNetworking: true,
+    openToGuestSpeaking: false,
     connectQuestions: [
       { id: "q1", prompt: "What's your dream role?", required: true },
     ],
@@ -540,6 +544,18 @@ function SpeakerConnect() {
                   <h4 className="pro-name">{pro.name}</h4>
                   <div className="pro-title">{pro.title}</div>
                   <div className="pro-org">{pro.org}</div>
+                  <div className="pro-status-badges">
+                    {pro.openToNetworking && (
+                      <span className="status-badge-networking" data-testid={`badge-networking-${pro.id}`}>
+                        Open to Networking
+                      </span>
+                    )}
+                    {pro.openToGuestSpeaking && (
+                      <span className="status-badge-speaking" data-testid={`badge-speaking-${pro.id}`}>
+                        Open to Speaking
+                      </span>
+                    )}
+                  </div>
                   <p className="pro-bio">{pro.bio}</p>
                   <div className="pro-tags">
                     {pro.tags.map((tag) => (
