@@ -36,7 +36,7 @@ function SpeakerSidebar() {
     { path: "/speakers/dashboard/content", label: "Content Studio", icon: FileText, exact: false },
     { path: "/speakers/dashboard/earnings", label: "Earnings", icon: TrendingUp, exact: false },
     { path: "/speakers/dashboard/messages", label: "Messages", icon: MessageSquare, exact: false },
-    { path: "/speakers/dashboard/settings", label: "Settings", icon: Settings, exact: false },
+    { path: "/speakers/settings", label: "Settings", icon: Settings, exact: false },
   ];
 
   const isActive = (path: string, exact: boolean) => {
@@ -465,23 +465,30 @@ function EarningsTab() {
   );
 }
 
-// Placeholder components for Messages and Settings
+// Placeholder component for Messages
 function MessagesPlaceholder() {
+  const [, setLocation] = useLocation();
+  
   return (
     <div className="placeholder-page">
       <MessageSquare size={48} />
       <h2>Messages</h2>
       <p>Your messages will appear here</p>
-    </div>
-  );
-}
-
-function SettingsPlaceholder() {
-  return (
-    <div className="placeholder-page">
-      <Settings size={48} />
-      <h2>Settings</h2>
-      <p>Manage your account settings</p>
+      <button 
+        onClick={() => setLocation('/speakers/dashboard')}
+        style={{
+          marginTop: '16px',
+          background: '#2563EB',
+          color: 'white',
+          border: 'none',
+          borderRadius: '10px',
+          padding: '12px 24px',
+          fontWeight: '700',
+          cursor: 'pointer'
+        }}
+      >
+        Back to Dashboard
+      </button>
     </div>
   );
 }
@@ -504,7 +511,6 @@ export default function SpeakersDashboard() {
             <Route path="/speakers/dashboard/content" component={ContentStudioTab} />
             <Route path="/speakers/dashboard/earnings" component={EarningsTab} />
             <Route path="/speakers/dashboard/messages" component={MessagesPlaceholder} />
-            <Route path="/speakers/dashboard/settings" component={SettingsPlaceholder} />
           </Switch>
         </div>
       </main>

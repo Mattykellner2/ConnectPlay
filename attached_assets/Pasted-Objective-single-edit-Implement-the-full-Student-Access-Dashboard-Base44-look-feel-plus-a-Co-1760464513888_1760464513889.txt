@@ -1,0 +1,221 @@
+Objective (single edit): Implement the full Student Access Dashboard (Base44 look & feel) plus a “Connect” feature that lets students request connections with Industry Professionals (with pro-defined questions, code priority, and accept/decline workflow). Keep everything responsive and accessible. Use placeholder data now; wire to backend later. Apply all changes below in one edit.
+
+1) Routing & guard
+
+Route: /students/dashboard (redirect current “Access Dashboard” here).
+
+If student hasn’t entered a valid access code, redirect to /students/enter-code.
+
+For demo: accept code 1234 (comment that production codes are institution/cohort scoped).
+
+2) Sidebar (Base44)
+
+Sticky left sidebar with groups:
+
+Quick Access
+
+Home Page
+
+Navigation
+
+Dashboard (default active)
+
+My Speakers
+
+Content Library
+
+Events
+
+Messages
+
+Speaker Connect
+
+Settings
+
+Active item uses soft bg + bold label. All items navigate (create placeholder routes if missing).
+
+3) Top header banner (red gradient)
+
+Large, rounded-xl card with red gradient and subtle watermark.
+
+Left: avatar circle (initial), “Welcome back, {student.firstName}!” (H3/H2), subline: {institutionName} · {programName} · Class of {gradYear}.
+
+4) Blue callout – “Connect with a Speaker”
+
+Full-width blue callout with:
+
+Title: Connect with a Speaker
+
+Text: “Got an access code from a guest lecture? Use it for a priority connection.”
+
+Right CTA: Enter Speaker Code → (opens modal)
+
+Modal: code input + submit. For demo, accept 1234, show success toast, and set student.priorityForPros = true for pros who issued that code. Leave TODO for real cohort validation.
+
+5) Main content (2-column)
+
+Left: “Upcoming For You”
+
+List of 2–3 upcoming items (AMA/event) each with title, host/org, date/time, right View button.
+
+Right: “Recommended For You” + “Sponsored Opportunity”
+
+Recommended: image thumbnail with play overlay, title, creator line, Watch Now.
+
+Sponsored: orange gradient card with “Sponsored Opportunity (Ad)” pill, role/company/location, 1–2 lines, Learn More & Apply.
+
+All content is dummy for now, but shape must match Base44.
+
+NEW: 6) “Connect” feature (student ↔ industry pro)
+
+Add a Connect workflow accessible from Dashboard and Speaker Connect. It should be full-stack ready but use placeholders for now.
+
+6.1 Discovery UI (Student side)
+
+On Dashboard and Speaker Connect pages, add a “Find Industry Professionals” section:
+
+Search input (name, company, topic).
+
+Filters (expertise tags: PR, Marketing, Operations, Partnerships; availability).
+
+Results as pro cards: photo, name, title, org, short bio, tags, and a Connect button.
+
+6.2 Pro-defined questions (Admin/Pro side – placeholder)
+
+Each pro has optional Connect Questions (array of up to 5). Examples:
+
+“What do you hope to learn from me?”
+
+“Share a link to your resume or LinkedIn.”
+
+“What’s your dream role?”
+
+Store as metadata on the pro profile; for now, mock with 2–3 sample questions on a few cards.
+
+6.3 Connect Request modal (Student)
+
+Clicking Connect opens a modal that:
+
+Shows the pro’s custom questions (short answer fields; URLs validated).
+
+Requires answering all required questions (basic validation).
+
+Includes an optional Access Code field.
+
+If the student enters a valid pro-specific code, attach priority=true to this request.
+
+For demo: if the student previously entered “1234” in the blue callout, auto-flag requests to the matching pro with priority=true.
+
+Submit button: Send Request. On submit:
+
+Show toast: “Request sent! You’ll be notified when {pro.firstName} responds.”
+
+Save a local placeholder record:
+
+{
+  requestId,
+  studentId,
+  proId,
+  answers: [{questionId, value}],
+  priority: boolean,
+  status: 'pending',
+  createdAt
+}
+
+6.4 Pro inbox (placeholder)
+
+Add a hidden route/page placeholder for pros (e.g., /pros/requests) that lists:
+
+Pending requests with priority badge if priority=true (display at top).
+
+Each row shows student name, program, timestamp, and a Review button.
+
+Review drawer/modal shows:
+
+All student answers (Q&A list)
+
+Buttons: Accept (primary), Decline (secondary).
+
+Accept → set status accepted; Decline → set status declined. Show success toasts.
+
+6.5 Priority logic
+
+When a student uses a valid pro-specific code, that request is pinned to the top of that pro’s queue and visually labeled Priority (green pill).
+
+If multiple priority requests exist, sort by newest first; otherwise, sort by newest first for non-priority.
+
+6.6 Notifications (placeholder)
+
+On student submit: enqueue a faux notification to the pro (“New connection request from {student}”).
+
+On pro decision: enqueue a faux notification to the student (“{pro} accepted/declined your request”).
+
+Surface a small notifications bell with unread count on both sides (no backend yet).
+
+7) Speaker Connect page (Student)
+
+Keep the existing Find Industry Leaders look from earlier instructions.
+
+Add the Search + Filter + Connect behavior described in 6.1–6.3.
+
+If a student already has a pending request for a pro, disable Connect button and show “Pending” state.
+
+8) Data wiring (placeholders now, ready for backend)
+
+Create minimal local data models (can be in context/store) with TODOs for backend:
+
+type Pro = {
+  id: string;
+  name: string;
+  title: string;
+  org: string;
+  photoUrl?: string;
+  tags: string[]; // expertise topics
+  connectQuestions?: { id: string; prompt: string; required?: boolean }[];
+  acceptsCodes?: string[]; // e.g., ['STANFORD-MKTG-2025']
+};
+
+type Student = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  institutionName?: string;
+  programName?: string;
+  gradYear?: string | number;
+  priorityForPros?: string[]; // proIds with priority flag or a boolean map
+};
+
+type ConnectRequest = {
+  requestId: string;
+  studentId: string;
+  proId: string;
+  answers: { questionId: string; value: string }[];
+  priority: boolean;
+  status: 'pending' | 'accepted' | 'declined';
+  createdAt: string;
+};
+
+
+Utility (placeholder):
+
+validateProCode({ proId, code }) → returns { valid: boolean, priority: boolean } (demo: tie to “1234” or pro.acceptsCodes).
+
+submitConnectRequest(), listProRequests(), decideRequest().
+
+9) Accessibility & responsiveness
+
+Ensure keyboard-focus outlines on all inputs/buttons.
+
+Support Enter to submit code and request forms.
+
+Mobile: sidebar collapses; two-column layout stacks; modals adapt to full-screen on small viewports.
+
+10) Visual consistency
+
+Use Base44’s rounded-xl cards, soft shadows, and spacing.
+
+Primary buttons: solid; secondary: outline; consistent hover/active.
+
+Icons (Lucide or your set) at 18–20px.
+
+Apply everything above in ONE edit to minimize AI usage. All content and numbers remain dummy for now but must be wired for easy backend integration later.

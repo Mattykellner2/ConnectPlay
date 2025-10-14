@@ -25,6 +25,9 @@ import Messages from "@/pages/dashboard/Messages";
 import Connect from "@/pages/dashboard/Connect";
 import DashboardSettings from "@/pages/dashboard/DashboardSettings";
 import CreateContent from "@/pages/CreateContent";
+import SpeakerSettings from "@/pages/SpeakerSettings";
+import StudentsDashboard from "@/pages/StudentsDashboard";
+import StudentSettings from "@/pages/StudentSettings";
 
 function Router() {
   return (
@@ -69,12 +72,22 @@ function Router() {
       
       {/* Speaker action pages */}
       <Route path="/speakers/content/new" component={CreateContent} />
+      <Route path="/speakers/settings" component={SpeakerSettings} />
       
       {/* University Partner Dashboard with nested tab routing */}
       <Route path="/universities/partner-dashboard" component={UniversityPartnerDashboard} />
       <Route path="/universities/partner-dashboard/speaking" component={UniversityPartnerDashboard} />
       <Route path="/universities/partner-dashboard/content" component={UniversityPartnerDashboard} />
       <Route path="/universities/partner-dashboard/earnings" component={UniversityPartnerDashboard} />
+      
+      {/* Students Dashboard with nested routing */}
+      <Route path="/students/dashboard" component={StudentsDashboard} />
+      <Route path="/students/dashboard/speakers" component={StudentsDashboard} />
+      <Route path="/students/dashboard/content" component={StudentsDashboard} />
+      <Route path="/students/dashboard/events" component={StudentsDashboard} />
+      <Route path="/students/dashboard/messages" component={StudentsDashboard} />
+      <Route path="/students/dashboard/connect" component={StudentsDashboard} />
+      <Route path="/students/settings" component={StudentSettings} />
       
       <Route component={NotFound} />
     </Switch>
