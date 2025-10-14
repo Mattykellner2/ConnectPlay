@@ -57,11 +57,11 @@ export default function Partnerships() {
               We've received your partnership request. Our team will review your application and get back to you within 2 business days.
             </p>
             <Button 
-              onClick={() => window.location.href = "/universities/partner-dashboard"} 
+              onClick={() => window.location.href = "/universities/dashboard"} 
               data-testid="button-preview-dashboard"
               style={{ background: '#2563EB', borderColor: '#2563EB' }}
             >
-              Continue to Preview Dashboard
+              Continue to Dashboard
             </Button>
           </div>
         </div>

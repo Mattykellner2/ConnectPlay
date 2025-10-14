@@ -8,15 +8,28 @@ The application is built as a full-stack web platform with a React frontend and 
 
 ## Recent Changes
 
+**October 2024 - Universities Dashboard Sidebar Update (Base44 Light)**
+- Updated Universities Dashboard sidebar from dark (#0B1220) to light (#FFFFFF) theme
+- Added "University Portal" label below ConnectPlay logo in sidebar
+- Created ConnectPlay logo SVG at `public/brand/connectplay-mark.svg`
+- Updated `dashboard.css` with Base44 light sidebar styling:
+  - White background with subtle border (#E5E7EB)
+  - Light hover state (#F3F4F6)
+  - Active state with light blue background (#EEF2FF) and border (#DBEAFE)
+- Sidebar now visible on all navigation pages (Home, Content, Events, Messages, Connect, Settings)
+- Removed decorative icon from TopHeader right side
+- Updated Partnerships flow to redirect to `/universities/dashboard` (red OSU dashboard) instead of partner dashboard
+- **Dummy Data Note**: Dashboard currently shows sample data for demonstration purposes. When users create accounts, this will be replaced with real, user-specific data (their actual students, speakers, cohorts, and engagement metrics)
+
 **October 2024 - Universities Dashboard (Base44 Design)**
 - Implemented comprehensive Universities Dashboard at `/universities/dashboard` matching Base44 design specifications
 - Created `client/src/styles/dashboard.css` with OSU-themed styling including red gradient header (#A91414 to #7A0F0F)
 - Built dashboard component system:
-  - `Sidebar.tsx`: Dark-themed left sidebar navigation (#0B1220) with lucide-react icons
+  - `Sidebar.tsx`: Light-themed left sidebar navigation with lucide-react icons
   - `TopHeader.tsx`: Red gradient card featuring "The Ohio State University" and Fisher College of Business branding
   - `StatCard.tsx`: Reusable metrics cards with color-coded icons (red/green/purple/amber)
 - Main dashboard features:
-  - Four stat cards: Active Students (1,847), Speakers Booked (28), Active Cohorts (3), Avg. Engagement (91%)
+  - Four stat cards: Active Students, Speakers Booked, Active Cohorts, Avg. Engagement
   - Segmented tabs: Overview, Guest Speakers, Student Management, Access Codes
   - Two-column content panels: "Recent Speaker Events" and "Active Student Cohorts"
   - OSU red buttons (#9F1C1C) for primary actions
