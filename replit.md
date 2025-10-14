@@ -8,6 +8,28 @@ The application is built as a full-stack web platform with a React frontend and 
 
 ## Recent Changes
 
+**October 2024 - Events → Ask Me Anything (AMA) Page**
+- Built comprehensive Events AMA page at `/universities/dashboard/events` with Base44 design
+- Created `client/src/styles/events.css` with dedicated styling for AMA browsing and management
+- Implemented three-component system:
+  - `AmaTabs.tsx`: Tab navigation with three tabs (Discover AMAs, My RSVPs, My AMAs) showing counts and lucide-react icons
+  - `AmaCard.tsx`: Event cards with status pills (Upcoming/Live/Past), host info, topic tags, date/time/attendees meta, and functional CTAs
+  - `EventsAma.tsx`: Main page with live search, tab switching, and sidebar integration
+- Features:
+  - Live search filtering by AMA title, summary, tags, and host name
+  - Three-tab system switching data sources (ALL/RSVPS/MYAMAS)
+  - Status pill indicators using lucide-react icons (CalendarDays/Mic/Calendar for Upcoming/Live/Past)
+  - Functional "Join Meeting" and "Manage" buttons with toast notifications
+  - Empty state with Mic icon when no AMAs found
+  - "Host AMA" button in top-right navigates to `/universities/dashboard/events/new` using Wouter client-side routing
+  - Responsive grid: 2 columns → 1 column on mobile
+  - All interactive elements include data-testid attributes
+- Created placeholder EventsAmaNew page at `/universities/dashboard/events/new` for AMA creation form
+- Replaced all emojis with lucide-react icons (Search, Calendar, Mic, CalendarDays, Clock, Users, Settings, ExternalLink, Plus)
+- **Navigation Pattern**: Uses Wouter's `useLocation` and `setLocation` for client-side routing (no page reloads)
+- **Dummy Data Note**: Currently displays sample AMA events for demonstration. In production, universities will see real live sessions with industry experts and thought leaders
+- Sidebar already configured with Events navigation link using Calendar icon from lucide-react
+
 **October 2024 - Content Library Implementation**
 - Built comprehensive Content Library page at `/universities/dashboard/content` with Base44 design
 - Created `client/src/styles/content-library.css` with dedicated styling for content browsing experience
