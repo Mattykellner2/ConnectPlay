@@ -4,6 +4,17 @@
 
 ConnectPlay is a three-sided marketplace platform designed to connect universities, industry professionals, and students. It enables universities to offer verified guest speakers and curated educational content, professionals to monetize their expertise, and students to access industry knowledge and career development. The platform aims to be a full-stack web application with role-specific dashboards and streamlined user flows for partnerships, speaker onboarding, and student engagement.
 
+## Recent Changes (October 2025)
+
+**University Dashboard Features Implemented**:
+- **Create Class Form** (`/universities/dashboard/students/new`): Complete class creation workflow with fields for class name, academic term, department, course code, instructor, enrollment size, and optional description. Includes Zod validation and toast feedback.
+- **Import Roster Dialog**: Modal dialog accessible from Student Management with two import methods:
+  - CSV Upload: File upload for bulk student imports
+  - Manual Entry: Text area for entering student emails (one per line)
+- **Create Access Codes Form** (`/universities/dashboard/access-codes/new`): Batch access code generation with customizable prefix (max 10 chars), quantity selection (10-200 codes), and optional expiry date. Generated codes display in a copyable list with individual and bulk copy functionality.
+
+All university features include comprehensive data-testid attributes for testing and follow the Base44 design system with consistent styling.
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
