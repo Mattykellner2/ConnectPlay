@@ -5,6 +5,7 @@ import Overview from "@/pages/dashboard/Overview";
 import GuestSpeakers from "@/pages/dashboard/GuestSpeakers";
 import StudentManagement from "@/pages/dashboard/StudentManagement";
 import AccessCodes from "@/pages/dashboard/AccessCodes";
+import Professors from "@/pages/dashboard/Professors";
 import CreateClass from "@/pages/dashboard/CreateClass";
 import CreateAccessCodes from "@/pages/dashboard/CreateAccessCodes";
 import "@/styles/dashboard.css";
@@ -22,6 +23,7 @@ export default function UniversitiesDashboard() {
             <Route path="/universities/dashboard" component={Overview} />
             <Route path="/universities/dashboard/speakers" component={GuestSpeakers} />
             <Route path="/universities/dashboard/students" component={StudentManagement} />
+            <Route path="/universities/dashboard/professors" component={Professors} />
             <Route path="/universities/dashboard/access-codes" component={AccessCodes} />
             
             {/* Feature routes */}

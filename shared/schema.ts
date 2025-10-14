@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, boolean, integer, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -112,3 +112,104 @@ export const insertStudentProfileSchema = createInsertSchema(studentProfiles).om
 
 export type InsertStudentProfile = z.infer<typeof insertStudentProfileSchema>;
 export type StudentProfile = typeof studentProfiles.$inferSelect;
+
+// Industry Professional Profiles (Extended)
+export const professionalProfiles = pgTable("professional_profiles", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  jobTitle: text("job_title").notNull(),
+  company: text("company").notNull(),
+  industry: text("industry").notNull(),
+  location: text("location").notNull(),
+  bio: text("bio").notNull(),
+  profileImage: text("profile_image"),
+  networkingOpen: boolean("networking_open").notNull().default(true),
+  guestSpeaking: boolean("guest_speaking").notNull().default(true),
+  linkedinConnected: boolean("linkedin_connected").notNull().default(false),
+  linkedinProfileUrl: text("linkedin_profile_url"),
+  linkedinLastSync: timestamp("linkedin_last_sync"),
+  linkedinData: jsonb("linkedin_data"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertProfessionalProfileSchema = createInsertSchema(professionalProfiles).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertProfessionalProfile = z.infer<typeof insertProfessionalProfileSchema>;
+export type ProfessionalProfile = typeof professionalProfiles.$inferSelect;
+
+// Professors
+export const professors = pgTable("professors", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  department: text("department").notNull(),
+  universityId: varchar("university_id").notNull(),
+  universityName: text("university_name").notNull(),
+  classes: text("classes").array().notNull().default(sql`'{}'::text[]`),
+  speakers: text("speakers").array().notNull().default(sql`'{}'::text[]`),
+  totalConnections: integer("total_connections").notNull().default(0),
+  totalEventsHosted: integer("total_events_hosted").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertProfessorSchema = createInsertSchema(professors).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  department: z.string().min(1, "Department is required"),
+  universityId: z.string().min(1, "University ID is required"),
+  universityName: z.string().min(1, "University name is required"),
+});
+
+export type InsertProfessor = z.infer<typeof insertProfessorSchema>;
+export type Professor = typeof professors.$inferSelect;
+
+// Speaking Events
+export const speakingEvents = pgTable("speaking_events", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  professionalId: varchar("professional_id").notNull(),
+  professionalName: text("professional_name").notNull(),
+  eventName: text("event_name").notNull(),
+  universityId: varchar("university_id"),
+  professorId: varchar("professor_id"),
+  eventDate: timestamp("event_date").notNull(),
+  eventType: text("event_type").notNull(),
+  attendeeCount: integer("attendee_count").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertSpeakingEventSchema = createInsertSchema(speakingEvents).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertSpeakingEvent = z.infer<typeof insertSpeakingEventSchema>;
+export type SpeakingEvent = typeof speakingEvents.$inferSelect;
+
+// Leaderboard Entries
+export const leaderboardEntries = pgTable("leaderboard_entries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  professionalId: varchar("professional_id").notNull(),
+  professionalName: text("professional_name").notNull(),
+  month: text("month").notNull(),
+  year: integer("year").notNull(),
+  eventCount: integer("event_count").notNull().default(0),
+  rank: integer("rank"),
+  rewardGranted: boolean("reward_granted").notNull().default(false),
+  rewardAmount: text("reward_amount"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertLeaderboardEntrySchema = createInsertSchema(leaderboardEntries).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertLeaderboardEntry = z.infer<typeof insertLeaderboardEntrySchema>;
+export type LeaderboardEntry = typeof leaderboardEntries.$inferSelect;

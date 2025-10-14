@@ -33,6 +33,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import SpeakerSettings from "@/pages/dashboard/SpeakerSettings";
+import SpeakingEvents from "@/pages/dashboard/SpeakingEvents";
 
 // Dummy user data (to be replaced with real data)
 const dummyUser = {
@@ -854,6 +856,9 @@ export default function SpeakersDashboard() {
       
       <main className="speaker-main-content">
         <Switch>
+          <Route path="/speakers/settings">
+            <SpeakerSettings />
+          </Route>
           <Route path="/speakers/dashboard/events">
             <EventsPage />
           </Route>
@@ -862,6 +867,9 @@ export default function SpeakersDashboard() {
           </Route>
           <Route path="/speakers/dashboard/messages">
             <MessagesPlaceholder />
+          </Route>
+          <Route path="/speakers/dashboard/speaking">
+            <SpeakingEvents />
           </Route>
           <Route>
             <ProfileHeader />

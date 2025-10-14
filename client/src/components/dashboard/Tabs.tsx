@@ -6,6 +6,7 @@ const tabs: Tab[] = [
   { to: "/universities/dashboard", label: "Overview", testId: "tab-overview" },
   { to: "/universities/dashboard/speakers", label: "Guest Speakers", testId: "tab-speakers" },
   { to: "/universities/dashboard/students", label: "Student Management", testId: "tab-students" },
+  { to: "/universities/dashboard/professors", label: "Professors", testId: "tab-professors" },
   { to: "/universities/dashboard/access-codes", label: "Access Codes", testId: "tab-codes" },
 ];
 

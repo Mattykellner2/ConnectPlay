@@ -1,0 +1,314 @@
+Objective (single edit):
+Expand the Industry Pro dashboard and University dashboard to include:
+
+LinkedIn quick setup for industry pros.
+
+Networking & Guest Speaking toggles that dynamically hide/show related features.
+
+Public visibility of “Open to Networking” and “Guest Speaking” status.
+
+Speaking engagement tracking + leaderboard & rewards system.
+
+Professor-level accounts nested inside University accounts with tailored permissions.
+Keep everything as placeholder logic now (demo mode), wired for backend later. Do all below in one edit to minimize AI credit use.
+
+A) INDUSTRY PRO DASHBOARD ENHANCEMENTS
+A1) Quick Setup with LinkedIn
+
+Add to onboarding & settings:
+
+Feature:
+
+A button: “🔗 Quick Setup with LinkedIn”
+
+On click → simulate OAuth connection (for demo, use “LinkedIn connected ✅”).
+
+Pulls:
+
+Name
+
+Title
+
+Company
+
+Profile image
+
+Summary headline
+
+Auto-fills fields in profile.
+
+Add Edit and Refresh buttons to update manually or sync again.
+
+Data object:
+
+pro.linkedin = {
+  connected: boolean,
+  profileUrl?: string,
+  lastSync?: string,
+  autoFillData?: { title: string; org: string; photoUrl: string; summary: string }
+};
+
+A2) Open to Networking Toggle
+
+In Settings, add switch:
+
+Open to Networking [ ON | OFF ]
+“Control whether students can connect with you.”
+
+Behavior:
+
+When ON:
+
+Student side can see “Connect” button on pro profile.
+
+Student can submit connection requests.
+
+When OFF:
+
+All networking features for that pro disappear on the student side.
+
+“Connect” button hidden, replaced by: “This speaker is not currently open to networking.”
+
+On backend:
+
+pro.networkingOpen = boolean;
+
+
+Filter out pros where networkingOpen === false in all student searches.
+
+A3) Guest Speaking Toggle
+
+In Settings, add another switch:
+
+Guest Speaking Availability [ ON | OFF ]
+“Allow universities to invite you for guest lectures or panels.”
+
+Behavior:
+
+When ON:
+
+“Invite to Speak” & “Book Event” options appear on university/professor dashboards.
+
+Appears as “Guest Speaking: ✅ Enabled” on the pro’s public profile card.
+
+When OFF:
+
+Hide all event-related actions on student/university dashboards.
+
+Show: “Guest Speaking: 🚫 Not accepting invitations.”
+
+Set pro.guestSpeaking = boolean;.
+
+A4) Public Display (Networking & Speaking Status)
+
+Visible tags under every Industry Pro’s name across platform:
+
+🟢 “Open to Networking” / 🔴 “Networking Closed”
+
+🟢 “Guest Speaking Active” / 🔴 “Guest Speaking Closed”
+
+These auto-update with toggles from Settings.
+
+A5) Speaking Engagement Tracker + Leaderboard
+
+Add to Dashboard → Speaking Events tab:
+
+Monthly Tracker Section:
+
+“Speaking Engagements This Month” counter (placeholder count).
+
+“Lifetime Total” stat.
+
+“Top Speakers Leaderboard” (shows 10 pros with most engagements in past 30 days).
+
+Leaderboard fields:
+
+Rank	Name	Events this month	Reward Status
+1	Dr. Emily Carter	5	🏆 $100 Gift Card
+2	Marcus Johnson	4	—
+3	Sarah Chen	3	—
+
+Logic placeholder:
+
+const monthlyEngagements = countEventsThisMonth(pro.id);
+const leaderboard = getTopSpeakers(10);
+
+
+Reward:
+Top 3 each month → mark rewardGranted: true (for demo, static text “🏆 Reward: $100 Gift Card”).
+Add “Redeem Reward” button (nonfunctional placeholder).
+
+B) UNIVERSITY DASHBOARD UPGRADES
+B1) Professor Tab / Accounts
+
+Create two account levels within a university org:
+
+a. University Admin
+
+Access: All students, all professors, all analytics.
+
+Tabs:
+
+Overview
+
+Students
+
+Professors
+
+Analytics
+
+Manage Speakers / Invitations
+
+Settings
+
+Can manage and invite professors; view total engagement stats and student participation.
+
+b. Professor Account
+
+Each university professor has:
+
+Login under same university org.
+
+Can see only their own classes, their own speakers, and their own stats.
+
+Professor Dashboard Includes:
+
+My Classes (list of classes assigned)
+
+My Speakers (connected industry pros)
+
+Student Participation Analytics (connections, content views, event attendance)
+
+Requests/Invites (outstanding guest speaker invitations)
+
+Leaderboard view (professor-only) showing their class engagement ranking
+
+Data model additions:
+
+type Professor = {
+  id: string;
+  name: string;
+  email: string;
+  department: string;
+  universityId: string;
+  classes: string[];
+  speakers: string[];
+  analytics?: { totalConnections: number; totalEventsHosted: number };
+};
+
+type UniversityAdmin = {
+  id: string;
+  name: string;
+  universityName: string;
+  professors: Professor[];
+  students: Student[];
+  analytics: { totalConnections: number; totalSpeakers: number; eventsThisMonth: number };
+};
+
+
+Professor Dashboard Layout:
+
+Left sidebar identical to all dashboards (Home Page + Navigation).
+
+Main cards:
+
+“Active Classes”
+
+“Speakers Connected”
+
+“Student Engagement This Month”
+
+“Upcoming Events”
+
+Buttons: Invite Speaker, View Class Analytics.
+
+B2) Professor View under University Admin
+
+When the admin opens “Professors” tab:
+
+Displays a table of all professors:
+| Professor | Department | Classes | Speakers | Engagement Score |
+
+Clicking a professor opens their dedicated sub-dashboard (read-only for admin).
+
+B3) Connection Mapping (University ↔ Professor ↔ Student ↔ Pro)
+
+Flow:
+
+Admin assigns professors to classes.
+
+Professors see their own students + invited speakers.
+
+Students tied to those professors see only those relevant industry pros and events.
+
+Visual summary for each professor (Admin view):
+
+“Dr. Jennifer Martinez – 3 Classes, 5 Guest Speakers, 12 Student Connections, 2 Events Hosted This Month”
+
+C) SYSTEM-WIDE INTERACTIVITY RULES
+C1) Dynamic Feature Toggles
+
+All toggles must hide/show respective UI sections instantly (no refresh needed).
+
+Toggle	Impact on UI
+Networking OFF	Hides all “Connect” buttons & networking tabs from students.
+Guest Speaking OFF	Hides “Book Event,” “Invite to Speak,” and removes from Leaderboard tracking.
+Networking ON	Restores all connect-related UI instantly.
+Guest Speaking ON	Restores speaking-related tabs & leaderboard participation.
+C2) Display Everywhere
+
+Each Industry Pro Profile Card should display:
+
+Avatar + name
+
+Company/title
+
+🟢 or 🔴 icons for both toggles
+
+“View Profile” → shows LinkedIn-connected info if available.
+
+C3) Quick Access Everywhere
+
+Sidebar always includes “🏠 Home Page” link at top.
+
+Clicking “Home Page” = returns to respective role dashboard (Student, Pro, Professor, Admin).
+
+C4) Notifications (placeholders)
+
+When Pro toggles OFF networking → notify all pending students “{pro} is no longer open to networking.”
+
+When Guest Speaking OFF → remove open event invitations and notify universities.
+
+Professors get notified when one of their invited speakers changes availability.
+
+C5) Monthly Reset
+
+At the start of each month:
+
+Reset leaderboard counts.
+
+Generate “Top Speakers” reward list.
+
+Archive past leaderboard as “Hall of Fame.”
+
+D) RESPONSIVENESS & DESIGN
+
+Shared aesthetic = Base44 style (rounded-xl, soft shadows, modular cards).
+
+Sidebar persistent on desktop; collapses to top-nav menu on mobile.
+
+Icons 20px, accessible focus states, readable at 14–16px body text.
+
+Consistent gradient styling (red for headers, blue for calls-to-action, purple for metrics).
+
+E) PLACEHOLDER DATA HOOKS
+toggleNetworking(proId: string, status: boolean);
+toggleGuestSpeaking(proId: string, status: boolean);
+syncLinkedIn(proId: string);
+trackSpeakingEvent(proId: string, eventId: string);
+getMonthlyLeaderboard(): Leaderboard[];
+
+
+✅ Apply everything above in one single edit.
+All names, stats, and numbers are dummy placeholders.
+This structure should support rapid backend integration, minimize AI token usage, and future-proof the dashboard for both Industry Pros and Universities (Admins + Professors).

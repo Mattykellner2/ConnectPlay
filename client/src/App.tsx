@@ -16,6 +16,7 @@ import NotFound from "@/pages/not-found";
 import UniversitiesDashboard from "@/pages/UniversitiesDashboard";
 import SpeakersDashboard from "@/pages/SpeakersDashboard";
 import UniversityPartnerDashboard from "@/pages/UniversityPartnerDashboard";
+import ProfessorDashboard from "@/pages/ProfessorDashboard";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
 import ContentLibrary from "@/pages/ContentLibrary";
 import EventsAma from "@/pages/EventsAma";
@@ -46,10 +47,14 @@ function Router() {
       <Route path="/universities/dashboard" component={UniversitiesDashboard} />
       <Route path="/universities/dashboard/speakers" component={UniversitiesDashboard} />
       <Route path="/universities/dashboard/students" component={UniversitiesDashboard} />
+      <Route path="/universities/dashboard/professors" component={UniversitiesDashboard} />
       <Route path="/universities/dashboard/access-codes" component={UniversitiesDashboard} />
       <Route path="/universities/dashboard/speakers/new" component={UniversitiesDashboard} />
       <Route path="/universities/dashboard/students/new" component={UniversitiesDashboard} />
       <Route path="/universities/dashboard/access-codes/new" component={UniversitiesDashboard} />
+      
+      {/* Professors Dashboard */}
+      <Route path="/professors/dashboard" component={ProfessorDashboard} />
       
       {/* Sidebar navigation pages */}
       <Route path="/universities/dashboard/home" component={DashboardHome} />
@@ -68,10 +73,10 @@ function Router() {
       <Route path="/speakers/dashboard/earnings" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/messages" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/connections" component={SpeakersDashboard} />
+      <Route path="/speakers/settings" component={SpeakersDashboard} />
       
       {/* Speaker action pages */}
       <Route path="/speakers/content/new" component={CreateContent} />
-      <Route path="/speakers/settings" component={SpeakerSettings} />
       
       {/* University Partner Dashboard with nested tab routing */}
       <Route path="/universities/partner-dashboard" component={UniversityPartnerDashboard} />
