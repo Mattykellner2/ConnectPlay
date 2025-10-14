@@ -1,0 +1,280 @@
+:root {
+  --cl-bg: #F7F9FC;
+  --cl-surface: #FFFFFF;
+  --cl-border: #E5E7EB;
+  --cl-muted: #6B7280;
+  --cl-text: #0F172A;
+
+  --cl-blue: #2563EB;
+  --cl-green: #16A34A;
+  --cl-amber: #F59E0B;
+  --cl-violet: #7C3AED;
+
+  --cl-shadow: 0 4px 16px rgba(2, 6, 23, .06);
+}
+
+.cl-wrap {
+  padding: 22px 24px 40px;
+  background: var(--cl-bg);
+  min-height: calc(100vh - 64px);
+}
+
+.cl-title {
+  font-weight: 900;
+  font-size: 32px;
+  margin: 0;
+  color: var(--cl-text);
+}
+
+.cl-sub {
+  color: #94A3B8;
+  margin: 6px 0 18px;
+}
+
+.cl-toolbar {
+  background: var(--cl-surface);
+  border: 1px solid var(--cl-border);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  box-shadow: var(--cl-shadow);
+}
+
+.cl-search {
+  position: relative;
+  flex: 1;
+}
+
+.cl-search input {
+  width: 100%;
+  border: 1px solid var(--cl-border);
+  border-radius: 10px;
+  padding: 12px 14px 12px 40px;
+  font-size: 15px;
+  background: #fff;
+}
+
+.cl-search .icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: .6;
+}
+
+.cl-filter {
+  position: relative;
+}
+
+.cl-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--cl-border);
+  border-radius: 10px;
+  cursor: pointer;
+  min-width: 140px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.cl-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  z-index: 30;
+  background: #fff;
+  border: 1px solid var(--cl-border);
+  border-radius: 12px;
+  box-shadow: var(--cl-shadow);
+  padding: 6px;
+  min-width: 200px;
+}
+
+.cl-menu .opt {
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cl-menu .opt:hover {
+  background: #F3F4F6;
+}
+
+.cl-menu .opt.active::before {
+  content: "✓ ";
+  color: var(--cl-blue);
+}
+
+.cl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+@media (max-width: 1100px) {
+  .cl-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .cl-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--cl-border);
+  border-radius: 16px;
+  box-shadow: var(--cl-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: #E5E7EB;
+}
+
+.card-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 999px;
+  padding: 4px 8px;
+  border: 1px solid var(--cl-border);
+  background: #fff;
+}
+
+.b-video {
+  background: #E0E7FF;
+  border-color: #C7D2FE;
+}
+
+.b-doc {
+  background: #E5E7EB;
+}
+
+.b-master {
+  background: #EDE9FE;
+  border-color: #DDD6FE;
+}
+
+.b-spon {
+  background: #FEF3C7;
+  border-color: #FDE68A;
+  color: #92400E;
+}
+
+.b-free {
+  background: #DCFCE7;
+  border-color: #BBF7D0;
+  color: #065F46;
+}
+
+.b-price {
+  background: #DBEAFE;
+  border-color: #BFDBFE;
+  color: #1E40AF;
+}
+
+.card-title {
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--cl-text);
+}
+
+.card-desc {
+  color: #6B7280;
+  font-size: 14px;
+}
+
+.creator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.creator img {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #E5E7EB;
+}
+
+.creator .meta {
+  color: #94A3B8;
+  font-size: 12px;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #6B7280;
+  font-size: 13px;
+}
+
+.stats .star {
+  color: #F59E0B;
+  font-weight: 900;
+}
+
+.card-foot {
+  padding: 14px;
+  border-top: 1px solid var(--cl-border);
+  background: #F8FAFC;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.cta {
+  background: var(--cl-blue);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 900;
+  padding: 12px 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: opacity 0.2s;
+}
+
+.cta:hover {
+  opacity: 0.9;
+}
+
+.cta.secondary {
+  background: #1E293B;
+}
+
+.cta.free {
+  background: var(--cl-blue);
+}

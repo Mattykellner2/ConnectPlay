@@ -1,0 +1,405 @@
+You are my code assistant. Modify the existing project in place (no new project).
+
+Goal: Build the Content Library page to match my Base44 design exactly:
+
+Large title + subtitle
+
+Search bar that filters as you type
+
+Three functional dropdown filters: Types, Prices, Topics
+
+A responsive card grid with badges (Video/Document/Masterclass, Sponsored, Free/$), rating, students count, and a CTA button (Unlock / Access Free)
+
+Page path to open from the left nav: /universities/dashboard/content
+
+Do not change global nav. Implement with React + CSS only.
+
+0) Files to create / update
+
+Create these files (TS or JS is fine—match the project):
+
+src/styles/content-library.css ✅ new
+
+src/components/content/FilterDropdown.tsx ✅ new
+
+src/components/content/ContentCard.tsx ✅ new
+
+src/pages/ContentLibrary.tsx ✅ new
+
+Update your router so the path /universities/dashboard/content renders <ContentLibrary />.
+
+1) Styles (Base44 look)
+
+Create src/styles/content-library.css and import it in ContentLibrary.tsx:
+
+:root{
+  --cl-bg:#F7F9FC;
+  --cl-surface:#FFFFFF;
+  --cl-border:#E5E7EB;
+  --cl-muted:#6B7280;
+  --cl-text:#0F172A;
+
+  --cl-blue:#2563EB;
+  --cl-green:#16A34A;
+  --cl-amber:#F59E0B;
+  --cl-violet:#7C3AED;
+
+  --cl-shadow:0 4px 16px rgba(2,6,23,.06);
+}
+
+/* Page */
+.cl-wrap{ padding: 22px 24px 40px; background:var(--cl-bg); min-height: calc(100vh - 64px); }
+.cl-title{ font-weight:900; font-size:32px; margin:0; color:var(--cl-text); }
+.cl-sub{ color:#94A3B8; margin:6px 0 18px; }
+
+/* Search + Filters row */
+.cl-toolbar{ background:var(--cl-surface); border:1px solid var(--cl-border); border-radius:14px; padding:12px; display:flex; gap:12px; align-items:center; box-shadow:var(--cl-shadow); }
+.cl-search{ position:relative; flex:1; }
+.cl-search input{
+  width:100%; border:1px solid var(--cl-border); border-radius:10px; padding:12px 14px 12px 40px; font-size:15px; background:#fff;
+}
+.cl-search .icon{ position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.6 }
+
+.cl-filter{ position:relative; }
+.cl-filter-btn{
+  display:flex; align-items:center; gap:8px; padding:10px 12px; background:#fff; border:1px solid var(--cl-border); border-radius:10px; cursor:pointer; min-width:140px; font-weight:700; color:#374151;
+}
+.cl-menu{
+  position:absolute; top:110%; left:0; z-index:30; background:#fff; border:1px solid var(--cl-border); border-radius:12px; box-shadow:var(--cl-shadow); padding:6px; min-width:200px;
+}
+.cl-menu .opt{ padding:10px 12px; border-radius:8px; cursor:pointer; font-weight:600; }
+.cl-menu .opt:hover{ background:#F3F4F6; }
+.cl-menu .opt.active::before{ content:"✓ "; color:var(--cl-blue); }
+
+/* Grid + card */
+.cl-grid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:18px; }
+@media (max-width: 1100px){ .cl-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width: 700px){ .cl-grid{ grid-template-columns:1fr; } }
+
+.card{
+  background:#fff; border:1px solid var(--cl-border); border-radius:16px; box-shadow:var(--cl-shadow); overflow:hidden; display:flex; flex-direction:column;
+}
+.card-img{ width:100%; height:160px; object-fit:cover; background:#E5E7EB; }
+
+.card-body{ padding:14px; display:flex; flex-direction:column; gap:10px; }
+.badges{ display:flex; align-items:center; gap:8px; }
+.badge{ font-size:12px; font-weight:900; border-radius:999px; padding:4px 8px; border:1px solid var(--cl-border); background:#fff; }
+.b-video{ background:#E0E7FF; border-color:#C7D2FE; }
+.b-doc{ background:#E5E7EB; }
+.b-master{ background:#EDE9FE; border-color:#DDD6FE; }
+.b-spon{ background:#FEF3C7; border-color:#FDE68A; color:#92400E; }
+.b-free{ background:#DCFCE7; border-color:#BBF7D0; color:#065F46; }
+.b-price{ background:#DBEAFE; border-color:#BFDBFE; color:#1E40AF; }
+
+.card-title{ font-weight:900; font-size:18px; line-height:1.3; color:var(--cl-text); }
+.card-desc{ color:#6B7280; font-size:14px; }
+
+.creator{ display:flex; align-items:center; gap:10px; }
+.creator img{ width:28px; height:28px; border-radius:999px; object-fit:cover; background:#E5E7EB; }
+.creator .meta{ color:#94A3B8; font-size:12px; }
+
+.stats{ display:flex; align-items:center; gap:18px; color:#6B7280; font-size:13px; }
+.stats .star{ color:#F59E0B; font-weight:900; }
+
+.card-foot{ padding:14px; border-top:1px solid var(--cl-border); background:#F8FAFC; display:flex; justify-content:flex-start; }
+.cta{
+  background:var(--cl-blue); color:#fff; border:none; border-radius:10px; font-weight:900; padding:12px 16px; cursor:pointer; width:100%; text-align:center;
+}
+.cta.secondary{ background:#1E293B; }
+.cta.free{ background:var(--cl-blue); }
+
+2) Filter dropdown component
+
+Create src/components/content/FilterDropdown.tsx:
+
+import { useState, useRef, useEffect } from "react";
+
+type Opt = { label:string; value:string };
+export default function FilterDropdown({
+  label,
+  value,
+  options,
+  onChange,
+  minWidth = 160
+}:{ label:string; value:string; options:Opt[]; onChange:(v:string)=>void; minWidth?:number }){
+  const [open,setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(()=>{
+    const onClick = (e:MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  },[]);
+
+  const current = options.find(o=>o.value===value)?.label ?? label;
+
+  return (
+    <div className="cl-filter" ref={ref} style={{minWidth}}>
+      <button type="button" className="cl-filter-btn" onClick={()=>setOpen(!open)}>
+        <span>{current}</span><span>▾</span>
+      </button>
+      {open && (
+        <div className="cl-menu" role="menu" aria-label={label}>
+          {options.map(o=>(
+            <div key={o.value}
+                 className={`opt ${o.value===value ? "active":""}`}
+                 role="menuitem"
+                 onClick={()=>{onChange(o.value); setOpen(false);}}>
+              {o.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+3) Content card component
+
+Create src/components/content/ContentCard.tsx:
+
+type Item = {
+  id:string;
+  title:string;
+  description:string;
+  type:"video"|"document"|"masterclass";
+  priceType:"free"|"paid";
+  price?:number;
+  topic:"PR"|"Marketing"|"Operations"|"Partnerships";
+  sponsored?:boolean;
+  rating?:number; students?:number;
+  cover?:string;
+
+  creator:{ name:string; title:string; avatar?:string };
+};
+
+export default function ContentCard({item}:{item:Item}){
+  const badgeType = item.type === "video" ? "Video Lecture"
+                    : item.type === "document" ? "Document" : "Masterclass";
+  return (
+    <article className="card">
+      <img className="card-img" src={item.cover || "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format"} alt="" />
+      <div className="card-body">
+        <div className="badges">
+          <span className={`badge ${item.type==="video"?"b-video": item.type==="document"?"b-doc":"b-master"}`}>{badgeType}</span>
+          {item.sponsored && <span className="badge b-spon">Sponsored</span>}
+          {item.priceType==="free"
+            ? <span className="badge b-free">Free</span>
+            : <span className="badge b-price">${item.price}</span>}
+        </div>
+
+        <div className="card-title">{item.title}</div>
+        <div className="card-desc">{item.description}</div>
+
+        <div className="creator">
+          <img src={item.creator.avatar || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=300&auto=format"} alt="" />
+          <div>
+            <div style={{fontWeight:700}}>{item.creator.name}</div>
+            <div className="meta">{item.creator.title}</div>
+          </div>
+        </div>
+
+        <div className="stats">
+          {typeof item.rating === "number" && <div><span className="star">★</span> {item.rating.toFixed(1)}</div>}
+          {typeof item.students === "number" && <div>👥 {item.students.toLocaleString()} students</div>}
+        </div>
+      </div>
+
+      <div className="card-foot">
+        {item.priceType==="free" ? (
+          <button className="cta free" onClick={()=>alert("Access granted (free).")}>▶︎ Access Free</button>
+        ) : (
+          <button className="cta" onClick={()=>alert("Checkout flow for $" + item.price)}>Unlock for ${item.price}</button>
+        )}
+      </div>
+    </article>
+  );
+}
+
+4) Page (search + filters + grid + filtering logic)
+
+Create src/pages/ContentLibrary.tsx:
+
+import { useMemo, useState } from "react";
+import "../styles/content-library.css";
+import FilterDropdown from "../components/content/FilterDropdown";
+import ContentCard from "../components/content/ContentCard";
+
+type Item = Parameters<typeof ContentCard>[0]["item"];
+
+/* Seed example items so the page renders (replace with real data later) */
+const SEED: Item[] = [
+  {
+    id:"1",
+    title:"How to Break Into Sports PR (30-Min Primer)",
+    description:"A concise walkthrough of resumes, outreach, and first 90 days.",
+    type:"video", priceType:"paid", price:29, topic:"PR",
+    rating:4.9, students:215,
+    creator:{name:"Jamie Rivera", title:"PR Director, Metro FC"},
+    cover:"https://images.unsplash.com/photo-1492724441997-5dc865305da7?q=80&w=1200&auto=format"
+  },
+  {
+    id:"2",
+    title:"Sponsorship Outreach Email Pack (12 Templates)",
+    description:"Cold outreach, warm intros, follow-ups, and post-meeting recaps.",
+    type:"document", priceType:"paid", price:19, topic:"Marketing",
+    rating:5.0, students:431,
+    creator:{name:"Alex Chen", title:"Sr. Partnerships Manager, City United"},
+    cover:"https://images.unsplash.com/photo-1551033406-611cf9a28f67?q=80&w=1200&auto=format"
+  },
+  {
+    id:"3",
+    title:"Wilson Sporting Goods: The Future of Equipment",
+    description:"Go behind the scenes at Wilson and see how we’re innovating.",
+    type:"video", priceType:"free", topic:"Partnerships", sponsored:true,
+    rating:4.8, students:1250,
+    creator:{name:"Rachel Kim", title:"Global Sports Marketing Director, Nike"},
+    cover:"https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format"
+  },
+  {
+    id:"4",
+    title:"Game-Day Communications Bootcamp (3 modules)",
+    description:"Run of show, media coordination, crisis basics.",
+    type:"masterclass", priceType:"paid", price:79, topic:"Operations",
+    rating:4.8, students:980,
+    creator:{name:"Dana Brooks", title:"Comms Lead, FC Seattle"},
+    cover:"https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format"
+  },
+  {
+    id:"5",
+    title:"Digital Sports Marketing Masterclass",
+    description:"Advanced strategies for digital campaigns in sports.",
+    type:"masterclass", priceType:"paid", price:89, topic:"Marketing",
+    rating:4.7, students:640,
+    creator:{name:"Tom Green", title:"Head of Growth, GoalCo"},
+    cover:"https://images.unsplash.com/photo-1557800636-894a64c1696f?q=80&w=1200&auto=format"
+  },
+  {
+    id:"6",
+    title:"Crisis Communication Playbook",
+    description:"Step-by-step guide for handling PR crises in professional sports.",
+    type:"document", priceType:"free", topic:"PR",
+    rating:4.9, students:1200,
+    creator:{name:"Nora Patel", title:"Director of Comms, Titans"},
+    cover:"https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1200&auto=format"
+  },
+];
+
+export default function ContentLibrary(){
+  const [q, setQ] = useState("");
+  const [type, setType] = useState<"all"|"video"|"document"|"masterclass">("all");
+  const [price, setPrice] = useState<"all"|"free"|"paid">("all");
+  const [topic, setTopic] = useState<"all"|"PR"|"Marketing"|"Operations"|"Partnerships">("all");
+
+  const filtered = useMemo(()=>{
+    const term = q.trim().toLowerCase();
+    return SEED.filter(it=>{
+      const okType  = type==="all"  || it.type===type;
+      const okPrice = price==="all" || it.priceType===price;
+      const okTopic = topic==="all" || it.topic===topic;
+      const okSearch = !term || (
+        it.title.toLowerCase().includes(term) ||
+        it.description.toLowerCase().includes(term) ||
+        it.creator.name.toLowerCase().includes(term) ||
+        it.creator.title.toLowerCase().includes(term)
+      );
+      return okType && okPrice && okTopic && okSearch;
+    });
+  },[q,type,price,topic]);
+
+  return (
+    <div className="cl-wrap">
+      <h1 className="cl-title">Content Library</h1>
+      <div className="cl-sub">Discover premium courses, templates, and insights from industry experts.</div>
+
+      {/* Search + Filters */}
+      <div className="cl-toolbar">
+        <div className="cl-search">
+          <span className="icon">🔎</span>
+          <input
+            type="text"
+            placeholder="Search content, creators, or topics…"
+            value={q}
+            onChange={e=>setQ(e.target.value)}
+            aria-label="Search content"
+          />
+        </div>
+
+        <FilterDropdown
+          label="All Types"
+          value={type}
+          onChange={v=>setType(v as any)}
+          options={[
+            {label:"All Types", value:"all"},
+            {label:"Video", value:"video"},
+            {label:"PDF/Document", value:"document"},
+            {label:"Masterclass", value:"masterclass"},
+          ]}
+        />
+
+        <FilterDropdown
+          label="All Prices"
+          value={price}
+          onChange={v=>setPrice(v as any)}
+          options={[
+            {label:"All Prices", value:"all"},
+            {label:"Free", value:"free"},
+            {label:"Paid", value:"paid"},
+          ]}
+        />
+
+        <FilterDropdown
+          label="All Topics"
+          value={topic}
+          onChange={v=>setTopic(v as any)}
+          options={[
+            {label:"All Topics", value:"all"},
+            {label:"PR", value:"PR"},
+            {label:"Marketing", value:"Marketing"},
+            {label:"Operations", value:"Operations"},
+            {label:"Partnerships", value:"Partnerships"},
+          ]}
+        />
+      </div>
+
+      {/* Cards */}
+      <div className="cl-grid">
+        {filtered.map(item => <ContentCard key={item.id} item={item} />)}
+      </div>
+    </div>
+  );
+}
+
+5) Router wiring
+
+Add/ensure this route exists (left sidebar “Content Library” should point here):
+
+import ContentLibrary from "./pages/ContentLibrary";
+
+<Route path="/universities/dashboard/content" element={<ContentLibrary />} />
+
+6) What to keep identical to Base44
+
+Title/Subtitle typography and spacing (handled by CSS above).
+
+Three filters with the exact option labels:
+
+Types → All Types / Video / PDF/Document / Masterclass
+
+Prices → All Prices / Free / Paid
+
+Topics → All Topics / PR / Marketing / Operations / Partnerships
+
+Cards: badge stack (type, Sponsored, Free/$), title, short description, creator row with avatar + role, rating star + student count, CTA button that reads Unlock for $ or Access Free.
+
+Search bar filters cards live as you type.
+
+7) Outputs (have Replit print)
+
+When done, print:
+
+Files created/edited with one-line summaries.
+
+Active route /universities/dashboard/content confirmed.
+
+A short note confirming: live search, all three filters functional, and the grid updates instantly.
