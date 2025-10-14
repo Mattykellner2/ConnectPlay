@@ -1,0 +1,150 @@
+Objective (single edit): Replace the current Student Access “Access Dashboard” UI with the Base44 layout and interactions. Keep all data as placeholders that will later hydrate from the student’s account & cohort. The temporary demo access code 1234 should work for now, but the system must be ready for unique per-school/per-cohort codes.
+
+1) Routing & guard
+
+Route: /students/dashboard (redirect your existing “Access Dashboard” route here).
+
+If a student hasn’t entered a valid code, redirect to /students/enter-code.
+
+For demo only, accept code 1234 and place a comment that production codes are cohort-scoped and institution-scoped.
+
+2) Global layout (match Base44)
+
+Add a left sidebar with two groups:
+
+Quick Access
+
+Home Page
+
+Navigation
+
+Dashboard (active by default)
+
+My Speakers
+
+Content Library
+
+Events
+
+Messages
+
+Speaker Connect
+
+Settings
+
+Sidebar stays sticky; active item has soft background + bold label; all items navigate (create placeholder routes where needed).
+
+3) Top header card (red banner)
+
+At top of main content, create a welcome banner with a dark red gradient, rounded-xl, subtle shadow.
+
+Left cluster:
+
+Avatar circle with student initial (e.g., “A”).
+
+“Welcome back, {student.firstName}!” as H3/H2 weight.
+
+Under it: {institutionName} · {programName} · Class of {gradYear} (all placeholder fields for now).
+
+Right side: light, faint campus watermark icon (decoration only).
+
+4) Blue “Connect with a Speaker” card
+
+Immediately below header: full-width blue callout with:
+
+Title: “Connect with a Speaker”
+
+Short helper text: “Got an access code from a guest lecture? Use it for a priority connection.”
+
+Right-aligned primary button “Enter Speaker Code →”
+
+Opens a modal with an Input and Submit.
+
+For demo: accept 1234, close modal, show success toast “Code applied. You’re connected to this cohort.”
+(Leave hook to attach to cohort-specific validation later.)
+
+5) Main content: two columns
+
+Left column: “Upcoming For You”
+
+Card list with each item showing:
+
+Title (e.g., “AMA: Life as an ESPN Producer”)
+
+Host + organization line
+
+Date/time
+
+Right-aligned View button (secondary).
+
+Include two sample items like Base44 and allow more items later (scroll if needed).
+
+Right column: “Recommended For You” & “Sponsored Opportunity”
+
+Recommended For You card:
+
+Thumbnail image
+
+Title (e.g., “Breaking into Sports Marketing”)
+
+Creator line (e.g., “Sarah Chen, ESPN”)
+
+“Watch Now” play overlay on the image.
+
+Sponsored Opportunity card:
+
+Orange gradient, “Sponsored Opportunity” with small Ad pill.
+
+Internship/job listing (company, location).
+
+Short description line or two.
+
+CTA button: “Learn More & Apply”.
+
+All items above use dummy content now; wire to real feeds later.
+
+6) Replace the old student widgets
+
+Remove the KPI tiles row and tab strip from the existing student page.
+
+Keep the Welcome context, but use the new banner + blue callout + two-column content as described.
+
+7) Styling & components
+
+Use the same icon set used site-wide (Lucide or your current set).
+
+Keep Base44 spacing: rounded-xl, soft shadows, consistent paddings, 16/20/24px typographic rhythm.
+
+Button styles:
+
+Primary (solid) for Enter Speaker Code, Watch Now, Learn More & Apply.
+
+Secondary (outline) for View on each event row.
+
+Hover/focus states on all interactive elements; ensure keyboard navigation works.
+
+8) Data & future wiring
+
+All data shown = placeholders.
+
+Prepare props/state for:
+
+student.firstName, institutionName, programName, gradYear
+
+recommendedContent[], upcomingEvents[], sponsored[]
+
+enterSpeakerCode(code) → today accepts 1234, tomorrow validates per-cohort.
+
+Leave TODO comments where backend hooks will attach.
+
+9) Responsiveness
+
+On tablet/mobile:
+
+Sidebar collapses to a menu button (or icon rail).
+
+Right column stacks under the left; maintain card spacing.
+
+Banner height reduces; text wraps cleanly.
+
+Important: Apply all changes above in one edit to minimize AI usage. Do not split into separate edits.

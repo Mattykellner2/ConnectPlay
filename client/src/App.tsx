@@ -24,6 +24,7 @@ import EventsAmaNew from "@/pages/EventsAmaNew";
 import Messages from "@/pages/dashboard/Messages";
 import Connect from "@/pages/dashboard/Connect";
 import DashboardSettings from "@/pages/dashboard/DashboardSettings";
+import CreateContent from "@/pages/CreateContent";
 
 function Router() {
   return (
@@ -63,6 +64,11 @@ function Router() {
       <Route path="/speakers/dashboard/speaking" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/content" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/earnings" component={SpeakersDashboard} />
+      <Route path="/speakers/dashboard/messages" component={SpeakersDashboard} />
+      <Route path="/speakers/dashboard/settings" component={SpeakersDashboard} />
+      
+      {/* Speaker action pages */}
+      <Route path="/speakers/content/new" component={CreateContent} />
       
       {/* University Partner Dashboard with nested tab routing */}
       <Route path="/universities/partner-dashboard" component={UniversityPartnerDashboard} />

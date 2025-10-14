@@ -1,0 +1,195 @@
+Goal: Replace the current Industry Professional (“Become a Speaker”) preview dashboard with the Base44 design and interactions, in a single edit. Keep everything responsive. Use placeholder (dummy) data that will later hydrate from the logged-in user.
+
+0) Routing & layout
+
+Create/replace the speaker dashboard at /speakers/dashboard with this structure:
+
+SpeakerDashboardLayout (shell)
+
+left sidebar nav (persistent)
+
+top profile header (persistent)
+
+top tab bar (persistent): Overview · Speaking Events · Content Studio · Earnings
+
+tab content area (switches by route or internal state)
+
+If the current route differs, add a redirect from the existing “continue to preview dashboard” route to /speakers/dashboard.
+
+1) Sidebar (add and make functional)
+
+Left column (sticky) matching Base44 spacing/weights.
+
+Top: ConnectPlay logo → clicking routes to /speakers/dashboard.
+
+Section: Navigation
+
+Overview → shows Overview tab
+
+Speaking Events
+
+Content Studio
+
+Earnings
+
+Messages
+
+Settings
+
+Active item highlighted with soft background and bold label.
+
+Icons: use the same icon family sitewide (e.g., Lucide). Size 18–20px.
+
+2) Profile header (at top of content, always visible)
+
+Dark, subtle gradient container with rounded-xl and soft shadow (Base44 style).
+
+Left: profile photo (circle, 64–72px), “Welcome back, {user.fullName}” as H3/H2 weight, and a 2nd-line subtitle ({user.title} at {user.company} if available).
+
+Small green pill badge: Industry Expert (static UI, data-driven later).
+
+Right: “Create Content” button (primary, with plus icon). Wire to /speakers/content/new (temporary route OK).
+
+3) KPI cards row (same across tabs)
+
+Show 4 cards with larger icons that match Base44:
+
+Total Revenue (green money icon)
+
+Content Sales (book/doc icon)
+
+Speaking Events (microphone icon)
+
+Average Rating (star icon)
+
+Card rules:
+
+Same card height, rounded-xl, soft shadow, icon in a soft colored badge (24–28px).
+
+Title, big number, tiny subtext line.
+
+Use dummy values now; must bind later from real user.
+
+4) Tab bar (directly under KPI row)
+
+Centered segmented control style with pill-highlight on active tab:
+
+Overview (default)
+
+Speaking Events
+
+Content Studio
+
+Earnings
+
+Tabs must be fully functional (client-state or subroutes like /speakers/dashboard?tab=events is fine).
+
+5) OVERVIEW tab (match Base44)
+
+Two equal-width cards side-by-side:
+
+A) Quick Actions
+
+4 action tiles with icon + label (grid 2×2):
+
+View Calendar
+
+Create Content
+
+View Earnings
+
+Manage Profile
+
+Click targets:
+
+Calendar → /speakers/calendar (placeholder)
+
+Create Content → /speakers/content/new
+
+View Earnings → switch to Earnings tab
+
+Manage Profile → /speakers/settings
+
+B) Recent Activity
+
+List items with small blue status dot, title, and light gray timestamp.
+
+Use 4 placeholder activities like Base44; replace later with real feed.
+
+6) SPEAKING EVENTS tab (match Base44)
+
+Section title: Upcoming Speaking Events (H2 weight).
+
+Right of title: small badge “{n} scheduled” (dummy now).
+
+Event cards list (3 sample rows now), each card includes:
+
+Left icon (calendar/building style in violet badge).
+
+Event title (bold)
+
+Host / Institution (subline)
+
+Small pill tags (date icon + date, then virtual OR in-person)
+
+Right side: price in green (e.g., $2,500) and Details button (eye icon).
+
+Bottom full-width CTA: View All Bookings (primary).
+
+Replace the current “empty state” with the full list UI (with dummy rows). When there are truly no events, show the empty state message centered, styled to match the rest.
+
+7) CONTENT STUDIO tab (match Base44)
+
+Section title: Content Performance
+
+Right side top: “Create New” button (primary + plus icon) → /speakers/content/new
+
+Three large stat panels (equal width on desktop, stack on mobile):
+
+Total Content (light blue panel)
+
+Total Views (soft green panel)
+
+Content Revenue (soft purple panel)
+
+Below stats: centered “Ready to Share Your Expertise?” panel with a Start Creating Content button that also routes to /speakers/content/new.
+
+All numbers are dummy and must update when real data is connected.
+
+8) EARNINGS tab (match Base44)
+
+Section title: Earnings Overview
+
+Two main panels at the top:
+
+Total Earnings (This Month) — large green tile with big dollar amount
+
++% vs Last Month (Growth) — gradient blue tile with % value and small “Growth” badge
+
+Transactions summary list below (sample two rows):
+
+Speaking – {Institution}
+Subtitle: Session name (e.g., “Sports Marketing Guest Lecture”)
+Right: +$2,500 in green and date
+
+Content Sales – {Product}
+Subtitle: e.g., “Digital Marketing Playbook”
+Right: +$340 and date range
+
+Footer CTA: View Detailed Analytics (primary). Route to /speakers/earnings/analytics (placeholder OK).
+
+9) Dummy data & wiring
+
+Keep all data placeholders: they must later hydrate from the logged-in Industry Pro account (revenue, content, events, activity).
+
+Buttons and links must navigate; where a real page doesn’t exist yet, use stub routes/components with a simple placeholder card.
+
+Maintain consistent font sizes, paddings, shadows, and hover states across all new elements (use the same tokens your app uses elsewhere).
+
+10) Accessibility & responsiveness
+
+Ensure keyboard focus styles on all interactive elements.
+
+Mobile: sidebar collapses to an icon rail or hamburger; KPI cards stack; lists become single-column with preserved spacing.
+
+Important: Apply all of the above in one edit. Do not break into separate edits. Replace the current speaker preview dashboard UI with this unified version.
