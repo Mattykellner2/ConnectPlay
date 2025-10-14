@@ -2,94 +2,7 @@
 
 ## Overview
 
-ConnectPlay is a three-sided marketplace platform that connects universities, industry professionals, and students. The platform enables universities to provide verified guest speakers and curated educational content to their students, allows professionals to monetize their expertise through speaking engagements and content creation, and gives students access to industry knowledge and career development opportunities.
-
-The application is built as a full-stack web platform with a React frontend and Express backend, using PostgreSQL for data persistence. It features role-specific dashboards for universities, speakers, and students, with distinct user flows for partnership applications, speaker onboarding, and student access management.
-
-## Recent Changes
-
-**October 2024 - Events → Ask Me Anything (AMA) Page**
-- Built comprehensive Events AMA page at `/universities/dashboard/events` with Base44 design
-- Created `client/src/styles/events.css` with dedicated styling for AMA browsing and management
-- Implemented three-component system:
-  - `AmaTabs.tsx`: Tab navigation with three tabs (Discover AMAs, My RSVPs, My AMAs) showing counts and lucide-react icons
-  - `AmaCard.tsx`: Event cards with status pills (Upcoming/Live/Past), host info, topic tags, date/time/attendees meta, and functional CTAs
-  - `EventsAma.tsx`: Main page with live search, tab switching, and sidebar integration
-- Features:
-  - Live search filtering by AMA title, summary, tags, and host name
-  - Three-tab system switching data sources (ALL/RSVPS/MYAMAS)
-  - Status pill indicators using lucide-react icons (CalendarDays/Mic/Calendar for Upcoming/Live/Past)
-  - Functional "Join Meeting" and "Manage" buttons with toast notifications
-  - Empty state with Mic icon when no AMAs found
-  - "Host AMA" button in top-right navigates to `/universities/dashboard/events/new` using Wouter client-side routing
-  - Responsive grid: 2 columns → 1 column on mobile
-  - All interactive elements include data-testid attributes
-- Created placeholder EventsAmaNew page at `/universities/dashboard/events/new` for AMA creation form
-- Replaced all emojis with lucide-react icons (Search, Calendar, Mic, CalendarDays, Clock, Users, Settings, ExternalLink, Plus)
-- **Navigation Pattern**: Uses Wouter's `useLocation` and `setLocation` for client-side routing (no page reloads)
-- **Dummy Data Note**: Currently displays sample AMA events for demonstration. In production, universities will see real live sessions with industry experts and thought leaders
-- Sidebar already configured with Events navigation link using Calendar icon from lucide-react
-
-**October 2024 - Content Library Implementation**
-- Built comprehensive Content Library page at `/universities/dashboard/content` with Base44 design
-- Created `client/src/styles/content-library.css` with dedicated styling for content browsing experience
-- Implemented three-component system:
-  - `FilterDropdown.tsx`: Reusable dropdown filter with click-outside-to-close functionality
-  - `ContentCard.tsx`: Content card with badges, ratings, student count, and functional unlock/access buttons
-  - `ContentLibrary.tsx`: Main page with live search and filtering logic
-- Features:
-  - Live search filtering by content title, description, creator name, and creator title
-  - Three functional dropdown filters: Types (All/Video/Document/Masterclass), Prices (All/Free/Paid), Topics (All/PR/Marketing/Operations/Partnerships)
-  - Responsive grid layout: 3 columns → 2 columns (tablets) → 1 column (mobile)
-  - Content cards display type badges (Video/Document/Masterclass), sponsored tags, pricing (Free/$), ratings with lucide-react star icons, and student counts with user icons
-  - Functional unlock/access buttons trigger toast notifications
-  - All interactive elements include data-testid attributes for testing
-- **Dummy Data Note**: Currently displays 6 sample content items for demonstration. In production, universities will see real professional content created by industry experts for purchase/access
-- Sidebar already configured with Content Library navigation link using Library icon from lucide-react
-
-**October 2024 - Universities Dashboard Sidebar Update (Base44 Light)**
-- Updated Universities Dashboard sidebar from dark (#0B1220) to light (#FFFFFF) theme
-- Added "University Portal" label below ConnectPlay logo in sidebar
-- Created ConnectPlay logo SVG at `public/brand/connectplay-mark.svg`
-- Updated `dashboard.css` with Base44 light sidebar styling:
-  - White background with subtle border (#E5E7EB)
-  - Light hover state (#F3F4F6)
-  - Active state with light blue background (#EEF2FF) and border (#DBEAFE)
-- Sidebar now visible on all navigation pages (Home, Content, Events, Messages, Connect, Settings)
-- Removed decorative icon from TopHeader right side
-- Updated Partnerships flow to redirect to `/universities/dashboard` (red OSU dashboard) instead of partner dashboard
-- **Dummy Data Note**: Dashboard currently shows sample data for demonstration purposes. When users create accounts, this will be replaced with real, user-specific data (their actual students, speakers, cohorts, and engagement metrics)
-
-**October 2024 - Universities Dashboard (Base44 Design)**
-- Implemented comprehensive Universities Dashboard at `/universities/dashboard` matching Base44 design specifications
-- Created `client/src/styles/dashboard.css` with OSU-themed styling including red gradient header (#A91414 to #7A0F0F)
-- Built dashboard component system:
-  - `Sidebar.tsx`: Light-themed left sidebar navigation with lucide-react icons
-  - `TopHeader.tsx`: Red gradient card featuring "The Ohio State University" and Fisher College of Business branding
-  - `StatCard.tsx`: Reusable metrics cards with color-coded icons (red/green/purple/amber)
-- Main dashboard features:
-  - Four stat cards: Active Students, Speakers Booked, Active Cohorts, Avg. Engagement
-  - Segmented tabs: Overview, Guest Speakers, Student Management, Access Codes
-  - Two-column content panels: "Recent Speaker Events" and "Active Student Cohorts"
-  - OSU red buttons (#9F1C1C) for primary actions
-- Created placeholder pages for all sidebar navigation links (home, speakers, content, events, messages, connect, settings)
-- Responsive design: Sidebar collapses to icon-only mode below 1024px, panels stack vertically on mobile
-- All navigation fully functional using wouter routing
-
-**October 2024 - Base44 Light Theme Redesign**
-- Transformed homepage from dark gradient aesthetic to clean, light Base44-inspired design
-- Created `client/src/styles/global.css` with comprehensive CSS custom properties for light theme
-- Rebuilt Navigation component with simple anchor tags (removed nested Link components that caused React errors)
-- Completely redesigned Home page (`client/src/pages/Home.tsx`) with six distinct sections:
-  - Hero section with blue accent on "Industry Experts"
-  - Three feature cards with color-coded icons (blue/purple/amber)
-  - "How ConnectPlay Works" four-step process
-  - "Complete Platform" features showcase
-  - "Trusted by Leading Institutions" social proof
-  - Dark footer with four-column navigation
-- Created dedicated Footer component (`client/src/components/Footer.tsx`)
-- Established new color system: Blue primary (#2563EB), Purple (#7C3AED), Green (#22C55E), Amber (#F59E0B)
-- Maintained existing dashboard pages and internal navigation structure
+ConnectPlay is a three-sided marketplace platform connecting universities, industry professionals, and students. Its purpose is to enable universities to provide verified guest speakers and curated educational content, allow professionals to monetize their expertise, and offer students access to industry knowledge and career development. The platform is a full-stack web application with a React frontend, Express backend, and PostgreSQL for data persistence, featuring role-specific dashboards and streamlined user flows for partnerships, speaker onboarding, and student access.
 
 ## User Preferences
 
@@ -99,85 +12,63 @@ Preferred communication style: Simple, everyday language.
 
 ### Frontend Architecture
 
-**Technology Stack**: React 18 with TypeScript, Vite as build tool, and Wouter for client-side routing. The UI is built using shadcn/ui components with Radix UI primitives and Tailwind CSS for styling.
+**Technology Stack**: React 18, TypeScript, Vite, Wouter for routing. UI is built with shadcn/ui components, Radix UI primitives, and Tailwind CSS.
 
-**Design System**: Light, professional Base44-inspired design system emphasizing clarity and approachability. The homepage features a clean white aesthetic with strategic use of color accents (blue for primary actions, purple for professional content, green for success states, amber for student-related features).
-
-**Typography**: Inter font family for all text with Inter system font stack fallback. Responsive heading sizes using CSS clamp() for fluid typography across viewport sizes. Font weights range from 600 (semibold for links) to 800 (extrabold for main headings).
+**Design System**: A light, professional Base44-inspired design emphasizing clarity. The homepage uses a clean white aesthetic with strategic color accents: blue for primary actions, purple for professional content, green for success, and amber for student features. Typography uses the Inter font family.
 
 **Color System**:
-- Primary: Blue (#2563EB) for CTAs and key UI elements
-- Purple: (#7C3AED) for professional/speaker-related content
-- Green: (#22C55E) for positive states and confirmations  
-- Amber: (#F59E0B) for student-related features and highlights
-- Neutral palette: Slate scale from #0F172A (text) to #F8FAFC (light backgrounds)
+- Primary: Blue (#2563EB)
+- Purple: (#7C3AED)
+- Green: (#22C55E)
+- Amber: (#F59E0B)
+- Neutral palette: Slate scale (#0F172A to #F8FAFC)
 
-**Component Architecture**: Modular component structure with reusable UI primitives in `client/src/components/ui/` and feature-specific components. Pages are organized by user role with dedicated components:
-- Navigation: Light navbar with subtle border, logo, center navigation links, and action buttons
-- Footer: Dark footer (#0B1220) with four-column layout for site navigation
-- Home sections: Hero, feature cards, how-it-works steps, platform features, trusted institutions
-- Role dashboards: UniversityDashboard, SpeakerDashboard, StudentDashboard
-- Universities Dashboard system (`/universities/dashboard`):
-  - Sidebar with icon navigation and wouter routing
-  - TopHeader with OSU red gradient (#A91414 to #7A0F0F)
-  - StatCard components with role-specific color coding
-  - Content panels for speaker events and student cohorts
-  - Placeholder pages for all navigation targets
+**Component Architecture**: Modular structure with reusable UI primitives and feature-specific components. Includes a light navbar, a dark four-column footer, and distinct sections for the homepage. Role-specific dashboards (University, Speaker, Student) are implemented, with the University Dashboard featuring a light sidebar, an OSU red gradient TopHeader, StatCard components, and content panels.
 
-**State Management**: React Query (@tanstack/react-query) for server state management with custom query client configuration. Form state managed through react-hook-form with Zod validation schemas.
+**State Management**: React Query for server state, react-hook-form with Zod for form state and validation.
 
-**Styling Approach**: Multi-layered styling system:
-1. Global CSS (`client/src/styles/global.css`) with CSS custom properties for Base44 light theme - includes button styles (.btn-primary, .btn-outline), card styles, typography, and layout helpers
-2. Dashboard CSS (`client/src/styles/dashboard.css`) for Universities Dashboard with OSU red branding, dark sidebar, stat cards, and content panels
-3. Tailwind CSS with shadcn/ui components for internal pages and UI primitives
-4. CSS variables for spacing (--space-1 through --space-10), border radius (--radius-sm/md/lg), and shadows (--shadow-sm/md)
+**Styling Approach**: Global CSS with custom properties for the Base44 light theme, specific dashboard CSS for university branding, Tailwind CSS with shadcn/ui for UI primitives, and CSS variables for spacing, borders, and shadows.
 
 ### Backend Architecture
 
-**Framework**: Express.js with TypeScript, running on Node.js. ESM module system throughout the codebase.
+**Framework**: Express.js with TypeScript and Node.js (ESM).
 
-**Server Structure**: Minimal Express setup in `server/index.ts` with route registration in `server/routes.ts`. Development middleware includes request logging with response capture and Vite integration for HMR.
+**Server Structure**: Minimal Express setup with route registration, using in-memory storage via an `IStorage` interface, designed for future database integration.
 
-**Data Access Layer**: Abstracted through `IStorage` interface in `server/storage.ts`. Currently implements in-memory storage (`MemStorage` class) with methods for user CRUD operations. Designed to be swapped with database-backed implementation.
-
-**Development Setup**: Vite middleware mode for development with custom logger. Production build uses esbuild to bundle server code. Environment-based configuration through process.env.
+**Development Setup**: Vite middleware for development, esbuild for production bundling, and environment-based configuration.
 
 ### Data Storage
 
-**ORM**: Drizzle ORM with Neon serverless PostgreSQL driver. Database schema defined in `shared/schema.ts` using Drizzle's table definitions.
+**ORM**: Drizzle ORM with Neon serverless PostgreSQL driver.
 
-**Schema Design**: 
-- `universityApplications` table stores partnership demo requests with fields for contact info, university details, program size, and partnership goals
-- `professionalApplications` table captures speaker applications including credentials, expertise topics, speaking formats, and fee structure
-- Tables use UUID primary keys with `gen_random_uuid()` defaults
-- Validation schemas created using drizzle-zod with custom refinements (e.g., .edu email validation)
+**Schema Design**: Uses Drizzle's table definitions in `shared/schema.ts` for entities like `universityApplications` and `professionalApplications`. UUID primary keys and drizzle-zod for validation (e.g., .edu email).
 
-**Database Connection**: Connection pooling through @neondatabase/serverless with WebSocket support. Database URL configured via environment variable with validation on startup.
+**Database Connection**: Connection pooling via `@neondatabase/serverless`.
 
-**Migrations**: Drizzle Kit configured for PostgreSQL dialect with migrations output to `./migrations` directory. Push-based schema updates available via `db:push` script.
+**Migrations**: Drizzle Kit configured for PostgreSQL, with migration output to `./migrations`.
 
-### External Dependencies
+## External Dependencies
 
-**UI Component Library**: shadcn/ui with Radix UI primitives (@radix-ui/react-*) for accessible, unstyled components including Dialog, Dropdown, Toast, Tabs, Form controls, and Navigation components.
+**UI Component Library**: shadcn/ui, leveraging Radix UI primitives (`@radix-ui/react-*`) for accessible UI components (Dialog, Dropdown, Toast, Tabs, Form controls).
 
-**Form Management**: react-hook-form for form state with @hookform/resolvers for Zod schema integration. Validation powered by Zod with drizzle-zod for type-safe database schema validation.
+**Form Management**: react-hook-form for form state, `@hookform/resolvers` for Zod integration.
 
-**Database & ORM**: 
-- @neondatabase/serverless for Neon PostgreSQL connection
-- drizzle-orm as the ORM layer
-- drizzle-kit for schema management and migrations
-- connect-pg-simple for PostgreSQL session store (prepared for session management)
+**Database & ORM**:
+- `@neondatabase/serverless` for Neon PostgreSQL.
+- `drizzle-orm` as the ORM.
+- `drizzle-kit` for schema management.
+- `connect-pg-simple` for PostgreSQL session store.
 
 **Styling & UI Utilities**:
-- Tailwind CSS for utility-first styling
-- class-variance-authority (CVA) for component variant management
-- clsx and tailwind-merge via cn() utility for conditional class merging
-- date-fns for date formatting and manipulation
-- lucide-react for icon system
+- Tailwind CSS for utility-first styling.
+- `class-variance-authority` (CVA) for component variants.
+- `clsx` and `tailwind-merge` for conditional class merging.
+- `date-fns` for date manipulation.
+- `lucide-react` for icons.
 
 **Development Tools**:
-- Replit-specific plugins for vite (runtime error overlay, cartographer, dev banner)
-- tsx for TypeScript execution in development
-- esbuild for production server bundling
+- Replit-specific Vite plugins.
+- `tsx` for TypeScript execution.
+- `esbuild` for server bundling.
 
-**Type System**: Shared types between client and server via `@shared` path alias. Zod schemas provide runtime validation and TypeScript type inference for API contracts.
+**Type System**: Shared types via `@shared` path alias, with Zod schemas for runtime validation and type inference.
