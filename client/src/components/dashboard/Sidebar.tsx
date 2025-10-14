@@ -25,8 +25,8 @@ export default function Sidebar() {
 
       <div className="section-label">Quick Access</div>
       <Link 
-        href="/universities/dashboard/home" 
-        className={`nav-item ${pathname === "/universities/dashboard/home" ? "active" : ""}`}
+        href="/" 
+        className={`nav-item ${pathname === "/" ? "active" : ""}`}
         data-testid="nav-home"
       >
         <Home size={18} />
