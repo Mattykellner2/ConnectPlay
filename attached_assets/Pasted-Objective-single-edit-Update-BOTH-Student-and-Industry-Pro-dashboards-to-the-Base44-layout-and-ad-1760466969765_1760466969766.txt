@@ -1,0 +1,248 @@
+Objective (single edit):
+Update BOTH Student and Industry Pro dashboards to the Base44 layout and add a fully working Connections system with:
+
+Events tab for Industry Pros.
+
+Home Page link at the top of the sidebar on every page.
+
+Connect with a Speaker (student) and Connection Requests / Network (pro + student) with priority via access code.
+Keep data as placeholders now; wire to backend later. Do all changes below in one edit to minimize AI usage.
+
+A) Shared Navigation & Layout
+A1) Global Sidebar (visible on every page, both roles)
+
+Top section:
+
+Home Page (always first; clicking returns to the role’s main dashboard)
+
+Section title: Navigation
+
+Dashboard (active by default)
+
+My Speakers
+
+Content Library
+
+Events ← (NEW for Industry Pros; Students keep Events too)
+
+Messages
+
+Speaker Connect
+
+Settings
+
+Behavior:
+
+Sidebar is sticky, shows active state (soft bg + bold).
+
+Exists on every page; keep keyboard/focus styles.
+
+Mobile: collapsible drawer.
+
+B) Student Experience (Base44 look)
+B1) Student Dashboard (match Base44)
+
+Main content (left sidebar already added):
+
+Red gradient banner with avatar circle (initial), “Welcome back, {firstName}!”, subline: {institution} · {program} · Class of {gradYear}.
+
+Blue callout “Connect with a Speaker” with Enter Speaker Code → button.
+
+Modal: code input. For demo, accept 1234 → show success toast and set student.priorityForPros[proId] = true.
+
+TODO: wire to cohort- and pro-specific validation in backend.
+
+Two-column content:
+
+Upcoming For You (event list, each row with title, host, date/time, View button).
+
+Recommended For You (thumbnail + Watch Now) and Sponsored Opportunity (orange card + Learn More & Apply).
+
+B2) Student → Speaker Connect
+
+Find Industry Professionals: search + filters (tags: PR, Marketing, Operations, Partnerships; availability).
+
+Pro cards show: photo, name, title/org, short bio, tags, Connect button.
+
+Connect Modal (Student):
+
+Renders the pro’s custom questions (up to 5; required enforced).
+
+Optional Access Code field:
+
+If a valid pro-specific code is entered, set priority=true on this request.
+
+For demo: if student entered 1234 in blue callout, auto-flag any request to that issuing pro as priority=true.
+
+Submit shows toast: “Request sent! You’ll be notified when {proFirstName} responds.”
+
+Persist a placeholder record:
+
+{
+  requestId, studentId, proId,
+  answers: [{ questionId, value }],
+  priority: boolean,
+  status: 'pending',
+  createdAt
+}
+
+B3) Student → Connections hub
+
+Add a new Connections section under Speaker Connect (tabs inside that page):
+
+Requests (outbound): list of requests with status (Pending/Accepted/Declined), pro name, submitted date.
+
+Network (accepted only): list of accepted pros with quick actions (Message, Book, View Profile).
+
+History (optional): past declines/cancellations.
+
+These are sub-tabs inside the Speaker Connect page to avoid extra routes.
+
+C) Industry Pro Experience
+C1) Pro Dashboard
+
+Use the same global sidebar (with Events included).
+
+Top banner (dark/neutral gradient): avatar, “Welcome back, {proName}”, subline: {title} at {company}.
+
+KPI tiles row (placeholders): Total Revenue, Content Sales, Speaking Events, Average Rating.
+
+Tab strip (beneath tiles): Overview, Speaking Events, Content Studio, Earnings.
+(Keep layouts from Base44 versions you provided; all numbers = dummy for now.)
+
+C2) Events tab (NEW on sidebar for Pros)
+
+Route: /pro/events (and also visible as tile/tab in dashboard strip).
+
+List Upcoming Speaking Events (title, org, date, tags like virtual/in-person, Details).
+
+Bottom CTA: View All Bookings.
+
+Empty state (if none): “No events yet—create your first event or accept a booking request.”
+
+C3) Pro → Connections hub (NEW)
+
+Add a Connections sub-nav inside Speaker Connect for Pros with tabs:
+
+Requests (inbound): show a sortable queue (newest first; priority requests appear at the top with a green Priority pill).
+
+Row: student name, program + institution, submitted time, Review.
+
+Review Drawer/Modal shows the student’s answers to pro’s questions and action buttons: Accept (primary) / Decline (secondary).
+
+Accept → status accepted; Decline → status declined. Toast result. Move item to appropriate list.
+
+Network: all accepted connections with quick actions (Message, Invite to Event, Remove).
+
+History: past declined/expired.
+
+Placeholders today; wire to backend later.
+
+C4) Pro → Settings → Connect Questions (NEW)
+
+In Settings, add a new card “Connect Questions”:
+
+Up to 5 questions; each has: Prompt (text), Required (toggle), Delete.
+
+Add “+ Add Question”.
+
+Save persists to pro profile metadata:
+
+pro.connectQuestions: { id, prompt, required? }[]
+
+
+Add an optional “Accepted Access Codes” list (strings) to mark which codes give priority for this pro:
+
+pro.acceptsCodes: string[] // e.g., ['STANFORD-MKTG-2025']
+
+D) Priority Logic (shared)
+
+If a student enters a pro-issued code, mark the request priority=true for that pro only.
+
+Pro’s Requests tab sorts:
+
+priority=true requests by createdAt desc,
+
+then non-priority by createdAt desc.
+
+UI: Priority green pill on row and in review drawer header.
+
+For demo:
+
+Treat 1234 as a valid code; when submitted from student side (blue callout or connect modal), set priority for any matching demo pro.
+
+Leave TODO comments where production validation must check code ↔ pro ↔ cohort.
+
+E) Data Models (placeholders now)
+type Pro = {
+  id: string;
+  name: string;
+  title: string;
+  org: string;
+  photoUrl?: string;
+  tags: string[];
+  connectsOpen?: boolean;
+  connectQuestions?: { id: string; prompt: string; required?: boolean }[];
+  acceptsCodes?: string[]; // priority codes for this pro
+};
+
+type Student = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  institutionName?: string;
+  programName?: string;
+  gradYear?: string | number;
+  priorityForPros?: Record<string, boolean>; // proId -> true if priority granted
+};
+
+type ConnectRequest = {
+  requestId: string;
+  studentId: string;
+  proId: string;
+  answers: { questionId: string; value: string }[];
+  priority: boolean;
+  status: 'pending' | 'accepted' | 'declined';
+  createdAt: string;
+};
+
+
+Helpers (stub now, backend later):
+
+validateProCode(proId: string, code: string): { valid: boolean; priority: boolean };
+submitConnectRequest(payload: ConnectRequest): Promise<void>;
+listProRequests(proId: string): Promise<ConnectRequest[]>;
+decideRequest(requestId: string, decision: 'accept' | 'decline'): Promise<void>;
+
+
+Notifications (placeholder):
+
+On student submit → notify pro “New connection request from {student}”.
+
+On pro decision → notify student “{pro} accepted/declined your request”.
+
+Add a small bell with unread count in the top-right of dashboards.
+
+F) Accessibility & Responsiveness
+
+Every page keeps the same sidebar with Home Page link.
+
+Keyboard-focus rings on all inputs/buttons.
+
+Modals support Esc to close and Enter to submit.
+
+Mobile: sidebar collapses; two-column sections stack.
+
+G) Visual System (match Base44)
+
+Cards: rounded-xl, soft shadows, neutral surfaces.
+
+Buttons:
+
+Primary (solid) for key actions: Enter Speaker Code, Send Request, Accept, Create Content, View All Bookings.
+
+Secondary (outline) for View, Decline.
+
+Icons at 18–20px; consistent spacing (16/20/24).
+
+IMPORTANT: Apply all of the above in one edit so it counts as a single AI action. Keep numbers, names, images as dummy content now; the structures and state should be ready for backend data later.

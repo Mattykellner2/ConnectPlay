@@ -604,3 +604,132 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Student Connection Tabs */
+.connect-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--student-border);
+  margin-bottom: 32px;
+}
+
+.connect-tab {
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  color: #64748B;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.connect-tab:hover {
+  color: var(--student-text);
+}
+
+.connect-tab.active {
+  color: #DC2626;
+  border-bottom-color: #DC2626;
+}
+
+.tab-panel {
+  margin-top: 24px;
+}
+
+.request-item,
+.network-item {
+  background: white;
+  border: 1px solid var(--student-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.request-details,
+.network-details {
+  flex: 1;
+}
+
+.request-details h4,
+.network-details h4 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--student-text);
+  margin: 0 0 4px 0;
+}
+
+.request-details p,
+.network-details p {
+  font-size: 14px;
+  color: #64748B;
+  margin: 0 0 8px 0;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-badge.pending {
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+.status-badge.accepted {
+  background: #DCFCE7;
+  color: #16A34A;
+}
+
+.status-badge.declined {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.priority-badge-small {
+  display: inline-block;
+  background: #DCFCE7;
+  color: #16A34A;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.network-quick-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state svg {
+  margin: 0 auto 20px;
+  color: var(--student-border);
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--student-text);
+  margin: 0 0 8px 0;
+}
+
+.empty-state p {
+  color: #64748B;
+  margin: 0;
+}
