@@ -5,6 +5,8 @@ import Overview from "@/pages/dashboard/Overview";
 import GuestSpeakers from "@/pages/dashboard/GuestSpeakers";
 import StudentManagement from "@/pages/dashboard/StudentManagement";
 import AccessCodes from "@/pages/dashboard/AccessCodes";
+import CreateClass from "@/pages/dashboard/CreateClass";
+import CreateAccessCodes from "@/pages/dashboard/CreateAccessCodes";
 import "@/styles/dashboard.css";
 
 export default function UniversitiesDashboard() {
@@ -22,25 +24,15 @@ export default function UniversitiesDashboard() {
             <Route path="/universities/dashboard/students" component={StudentManagement} />
             <Route path="/universities/dashboard/access-codes" component={AccessCodes} />
             
-            {/* Placeholder "new" routes */}
+            {/* Feature routes */}
             <Route path="/universities/dashboard/speakers/new">
               <div className="panel">
                 <h3>Book New Speaker</h3>
                 <p style={{ color: "#64748B" }}>Speaker booking form (TBD)</p>
               </div>
             </Route>
-            <Route path="/universities/dashboard/students/new">
-              <div className="panel">
-                <h3>Create New Class</h3>
-                <p style={{ color: "#64748B" }}>Class creation form (TBD)</p>
-              </div>
-            </Route>
-            <Route path="/universities/dashboard/access-codes/new">
-              <div className="panel">
-                <h3>Create Access Codes</h3>
-                <p style={{ color: "#64748B" }}>Access code generation form (TBD)</p>
-              </div>
-            </Route>
+            <Route path="/universities/dashboard/students/new" component={CreateClass} />
+            <Route path="/universities/dashboard/access-codes/new" component={CreateAccessCodes} />
           </Switch>
         </div>
       </main>

@@ -57,7 +57,7 @@ export default function StudentAccess() {
             <p className="text-lg text-muted-foreground">
               Your profile has been created successfully. You can now access all the features available through your institution.
             </p>
-            <Button onClick={() => window.location.href = "/student-dashboard"} data-testid="button-access-dashboard">
+            <Button onClick={() => window.location.href = "/students/dashboard"} data-testid="button-access-dashboard">
               Access Dashboard
             </Button>
           </div>

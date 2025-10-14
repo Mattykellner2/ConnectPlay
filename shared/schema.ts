@@ -20,9 +20,15 @@ export const insertUniversityApplicationSchema = createInsertSchema(universityAp
   id: true,
   createdAt: true,
 }).extend({
-  email: z.string().email().refine((email) => email.endsWith('.edu'), {
+  fullName: z.string().min(1, "Full name is required"),
+  title: z.string().min(1, "Title is required"),
+  universityName: z.string().min(1, "University name is required"),
+  email: z.string().email("Invalid email address").refine((email) => email.endsWith('.edu'), {
     message: 'Email must be from a .edu domain',
   }),
+  programSize: z.string().min(1, "Program size is required"),
+  goals: z.string().min(1, "Goals and objectives are required"),
+  timeline: z.string().min(1, "Implementation timeline is required"),
 });
 
 export type InsertUniversityApplication = z.infer<typeof insertUniversityApplicationSchema>;
@@ -47,6 +53,17 @@ export const professionalApplications = pgTable("professional_applications", {
 export const insertProfessionalApplicationSchema = createInsertSchema(professionalApplications).omit({
   id: true,
   createdAt: true,
+}).extend({
+  name: z.string().min(1, "Full name is required"),
+  email: z.string().email("Invalid email address"),
+  jobTitle: z.string().min(1, "Job title is required"),
+  company: z.string().min(1, "Company is required"),
+  industry: z.string().min(1, "Industry is required"),
+  location: z.string().min(1, "Location is required"),
+  bio: z.string().min(1, "Professional bio is required"),
+  topics: z.array(z.string()).min(1, "Select at least one speaking topic"),
+  formats: z.array(z.string()).min(1, "Select at least one speaking format"),
+  feeStructure: z.string().min(1, "Fee structure is required"),
 });
 
 export type InsertProfessionalApplication = z.infer<typeof insertProfessionalApplicationSchema>;
@@ -84,6 +101,13 @@ export const studentProfiles = pgTable("student_profiles", {
 export const insertStudentProfileSchema = createInsertSchema(studentProfiles).omit({
   id: true,
   createdAt: true,
+}).extend({
+  name: z.string().min(1, "Full name is required"),
+  email: z.string().email("Invalid email address"),
+  major: z.string().min(1, "Major is required"),
+  graduationYear: z.string().min(1, "Graduation year is required"),
+  studentId: z.string().min(1, "Student ID is required"),
+  accessCode: z.string().min(1, "Access code is required"),
 });
 
 export type InsertStudentProfile = z.infer<typeof insertStudentProfileSchema>;

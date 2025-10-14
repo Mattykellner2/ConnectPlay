@@ -9,7 +9,6 @@ import BecomeSpeaker from "@/pages/BecomeSpeaker";
 import StudentAccess from "@/pages/StudentAccess";
 import UniversityDashboard from "@/pages/UniversityDashboard";
 import SpeakerDashboard from "@/pages/SpeakerDashboard";
-import StudentDashboard from "@/pages/StudentDashboard";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/not-found";
@@ -40,7 +39,6 @@ function Router() {
       <Route path="/student-access" component={StudentAccess} />
       <Route path="/university-dashboard" component={UniversityDashboard} />
       <Route path="/speaker-dashboard" component={SpeakerDashboard} />
-      <Route path="/student-dashboard" component={StudentDashboard} />
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
       

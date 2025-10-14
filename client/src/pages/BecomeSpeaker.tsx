@@ -18,6 +18,7 @@ import { z } from "zod";
 export default function BecomeSpeaker() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [linkedInUrl, setLinkedInUrl] = useState("");
   const { toast } = useToast();
 
   const form = useForm<InsertProfessionalApplication>({
@@ -51,10 +52,30 @@ export default function BecomeSpeaker() {
     },
   });
 
-  const handleLinkedInQuickSetup = () => {
-    console.log('LinkedIn Quick Setup clicked');
+  const handleLinkedInImport = () => {
+    if (!linkedInUrl) {
+      toast({
+        title: "LinkedIn URL Required",
+        description: "Please enter your LinkedIn profile URL",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate LinkedIn URL format
+    if (!linkedInUrl.includes('linkedin.com')) {
+      toast({
+        title: "Invalid URL",
+        description: "Please enter a valid LinkedIn profile URL",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    console.log('Importing from LinkedIn URL:', linkedInUrl);
     
-    // Simulate LinkedIn data autofill
+    // TODO: In production, this would call a LinkedIn API or scraping service
+    // For now, simulate LinkedIn data autofill based on URL
     const linkedInData = {
       name: "John Smith",
       email: "john.smith@example.com",
@@ -141,16 +162,32 @@ export default function BecomeSpeaker() {
                 <>
                   <h2 className="text-2xl font-semibold mb-4">Basic Information</h2>
                   
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full border-[#0077B5] text-[#0077B5] hover:bg-[#0077B5]/10"
-                    onClick={handleLinkedInQuickSetup}
-                    data-testid="button-linkedin-setup"
-                  >
-                    <Linkedin className="mr-2 h-4 w-4" />
-                    Quick Setup with LinkedIn
-                  </Button>
+                  <div className="space-y-4 bg-[#0077B5]/5 p-4 rounded-lg border border-[#0077B5]/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Linkedin className="h-5 w-5 text-[#0077B5]" />
+                      <h3 className="font-semibold text-[#0077B5]">Quick Setup with LinkedIn</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Paste your LinkedIn profile URL to automatically fill in your information
+                    </p>
+                    <div className="flex gap-2">
+                      <Input
+                        value={linkedInUrl}
+                        onChange={(e) => setLinkedInUrl(e.target.value)}
+                        placeholder="https://www.linkedin.com/in/yourprofile"
+                        data-testid="input-linkedin-url"
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        onClick={handleLinkedInImport}
+                        data-testid="button-linkedin-import"
+                        className="bg-[#0077B5] hover:bg-[#0077B5]/90"
+                      >
+                        Import
+                      </Button>
+                    </div>
+                  </div>
 
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
@@ -265,7 +302,13 @@ export default function BecomeSpeaker() {
 
                   <Button 
                     type="button" 
-                    onClick={() => setStep(2)} 
+                    onClick={async () => {
+                      // Validate step 1 fields before proceeding
+                      const isValid = await form.trigger(['name', 'email', 'jobTitle', 'company', 'industry', 'location', 'bio']);
+                      if (isValid) {
+                        setStep(2);
+                      }
+                    }}
                     className="w-full" 
                     style={{ background: '#2563EB', borderColor: '#2563EB' }}
                     data-testid="button-next-step-1"
@@ -371,7 +414,13 @@ export default function BecomeSpeaker() {
                     </Button>
                     <Button 
                       type="button" 
-                      onClick={() => setStep(3)} 
+                      onClick={async () => {
+                        // Validate step 2 fields before proceeding
+                        const isValid = await form.trigger(['topics', 'formats', 'feeStructure']);
+                        if (isValid) {
+                          setStep(3);
+                        }
+                      }}
                       className="flex-1" 
                       style={{ background: '#2563EB', borderColor: '#2563EB' }}
                       data-testid="button-next-step-2"
