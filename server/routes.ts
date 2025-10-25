@@ -124,8 +124,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         zoomLink: zoomMeeting.joinUrl,
         zoomPassword: zoomMeeting.password,
         eventType: booking.eventType,
-        className: booking.className,
-        audienceSize: booking.audienceSize,
+        className: booking.className || undefined,
+        audienceSize: booking.audienceSize || undefined,
       });
 
       res.json(updatedBooking);
