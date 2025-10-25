@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/dialog";
 import SpeakerSettings from "@/pages/dashboard/SpeakerSettings";
 import SpeakingEvents from "@/pages/dashboard/SpeakingEvents";
+import SpeakerInvitations from "@/pages/dashboard/SpeakerInvitations";
 
 // Dummy user data (to be replaced with real data)
 const dummyUser = {
@@ -102,6 +103,7 @@ function SpeakerSidebar() {
   const navItems = [
     { path: "/speakers/dashboard", label: "Dashboard", icon: LayoutDashboard, exact: true },
     { path: "/speakers/dashboard/speaking", label: "Speaking Events", icon: Mic2, exact: false },
+    { path: "/speakers/dashboard/invitations", label: "Speaking Invitations", icon: Calendar, exact: false },
     { path: "/speakers/dashboard/events", label: "Events", icon: Calendar, exact: false },
     { path: "/speakers/dashboard/content", label: "Content Studio", icon: FileText, exact: false },
     { path: "/speakers/dashboard/earnings", label: "Earnings", icon: TrendingUp, exact: false },
@@ -870,6 +872,9 @@ export default function SpeakersDashboard() {
           </Route>
           <Route path="/speakers/dashboard/speaking">
             <SpeakingEvents />
+          </Route>
+          <Route path="/speakers/dashboard/invitations">
+            <SpeakerInvitations />
           </Route>
           <Route>
             <ProfileHeader />

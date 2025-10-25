@@ -6,6 +6,7 @@ export default function SpeakerTabs() {
   const tabs = [
     { to: "/speakers/dashboard", label: "Overview", exact: true },
     { to: "/speakers/dashboard/speaking", label: "Speaking Events", exact: false },
+    { to: "/speakers/dashboard/invitations", label: "Speaking Invitations", exact: false },
     { to: "/speakers/dashboard/content", label: "Content Studio", exact: false },
     { to: "/speakers/dashboard/earnings", label: "Earnings", exact: false },
   ];
