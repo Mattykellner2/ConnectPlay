@@ -22,6 +22,15 @@ ConnectPlay is a three-sided marketplace platform designed to connect universiti
 - **Import Roster Dialog**: Modal dialog accessible from Student Management with two import methods (CSV upload and manual email entry).
 - **Create Access Codes Form** (`/universities/dashboard/access-codes/new`): Batch access code generation with customizable prefix (max 10 chars), quantity selection (10-200 codes), and optional expiry date. Generated codes display in a copyable list with individual and bulk copy functionality.
 
+**Speaker Booking System** (NEW - October 2025):
+- **BookSpeakerDialog Component** (`client/src/components/BookSpeakerDialog.tsx`): Reusable dialog with comprehensive booking form. Includes event title, type, date/time, duration, class name, audience size, and description fields. Full Zod validation and React Query integration.
+- **Speaking Invitations Page** (`client/src/pages/dashboard/SpeakerInvitations.tsx`): Industry professional dashboard for managing booking requests with three tabs (Pending/Accepted/Declined). Features accept/decline actions, Zoom meeting display, and detailed booking cards.
+- **Zoom Integration** (`server/services/zoom.ts`): Server-to-Server OAuth implementation for instant meeting creation. Auto-generates meeting links with passwords when bookings are accepted.
+- **Resend Email Integration** (`server/services/resend.ts`): Automated email notifications with beautiful HTML templates. Sends booking confirmations to both professor and professional with complete event details and Zoom links.
+- **Booking API Routes** (`server/routes.ts`): RESTful endpoints for creating bookings (POST /api/bookings), retrieving bookings with filters (GET /api/bookings), accepting invitations with Zoom+email automation (PATCH /api/bookings/:id/accept), and declining (PATCH /api/bookings/:id/decline).
+- **Database Schema**: New `speaker_bookings` table with fields for professional/professor/university details, event information, Zoom meeting data, status tracking, and timestamps.
+- **Cost**: $0/month using Zoom free tier (100 participants, 40-min groups, unlimited 1-on-1) and Resend free tier (3,000 emails/month). See SPEAKER_BOOKING_SETUP.md for complete setup instructions.
+
 All features include comprehensive data-testid attributes for testing and follow the Base44 design system with consistent styling.
 
 ## User Preferences

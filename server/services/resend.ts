@@ -194,25 +194,19 @@ class ResendService {
   async sendBookingConfirmation(data: BookingEmailData): Promise<void> {
     // Send to professional
     await this.sendEmail({
-      to: data.professionalName !== data.recipientName ? data.recipientEmail : data.professionalName,
+      to: data.professionalEmail,
       subject: `📅 New Speaking Invitation: ${data.eventTitle}`,
       html: this.generateBookingEmailHTML(data, true),
     });
 
-    // Send to professor (different recipient)
-    const professorEmail = {
-      ...data,
-      recipientName: data.professorName,
-      recipientEmail: data.professorName !== data.recipientName ? data.professorName : data.recipientEmail,
-    };
-
+    // Send to professor
     await this.sendEmail({
-      to: professorEmail.recipientEmail,
+      to: data.professorEmail,
       subject: `✅ Speaker Booking Confirmed: ${data.eventTitle}`,
       html: this.generateBookingEmailHTML(data, false),
     });
 
-    console.log(`Booking confirmation emails sent for: ${data.eventTitle}`);
+    console.log(`Booking confirmation emails sent to both parties for: ${data.eventTitle}`);
   }
 
   /**

@@ -88,15 +88,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Booking is not in pending status" });
       }
 
-      // Create Zoom meeting
-      const zoomMeeting = await zoomService.createBookingMeeting(
-        booking.eventTitle,
-        booking.eventDate,
-        booking.eventTime,
-        booking.eventDuration
-      );
+      // Step 1: Create Zoom meeting (can fail, no state change yet)
+      let zoomMeeting;
+      try {
+        zoomMeeting = await zoomService.createBookingMeeting(
+          booking.eventTitle,
+          booking.eventDate,
+          booking.eventTime,
+          booking.eventDuration
+        );
+      } catch (zoomError: any) {
+        console.error("Zoom meeting creation failed:", zoomError);
+        return res.status(500).json({ 
+          error: "Failed to create Zoom meeting", 
+          details: zoomError.message 
+        });
+      }
 
-      // Update booking with Zoom details and accepted status
+      // Step 2: Update booking with Zoom details and accepted status
       const [updatedBooking] = await db
         .update(speakerBookings)
         .set({
@@ -104,29 +113,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
           zoomMeetingId: zoomMeeting.meetingId,
           zoomMeetingLink: zoomMeeting.joinUrl,
           zoomMeetingPassword: zoomMeeting.password,
-          emailSentAt: new Date(),
           updatedAt: new Date(),
         })
         .where(eq(speakerBookings.id, req.params.id))
         .returning();
 
-      // Send confirmation emails to both parties
-      await resendService.sendBookingConfirmation({
-        recipientName: booking.professionalName,
-        recipientEmail: booking.professionalEmail,
-        eventTitle: booking.eventTitle,
-        eventDate: booking.eventDate,
-        eventTime: booking.eventTime,
-        duration: booking.eventDuration,
-        professorName: booking.professorName,
-        professionalName: booking.professionalName,
-        universityName: booking.universityName,
-        zoomLink: zoomMeeting.joinUrl,
-        zoomPassword: zoomMeeting.password,
-        eventType: booking.eventType,
-        className: booking.className || undefined,
-        audienceSize: booking.audienceSize || undefined,
-      });
+      // Step 3: Send confirmation emails to both parties
+      // If this fails, booking is already accepted but emails not sent
+      // We'll mark emailSentAt only after successful send
+      try {
+        await resendService.sendBookingConfirmation({
+          recipientName: booking.professionalName,
+          recipientEmail: booking.professionalEmail,
+          professorEmail: booking.professorEmail,
+          professionalEmail: booking.professionalEmail,
+          eventTitle: booking.eventTitle,
+          eventDate: booking.eventDate,
+          eventTime: booking.eventTime,
+          duration: booking.eventDuration,
+          professorName: booking.professorName,
+          professionalName: booking.professionalName,
+          universityName: booking.universityName,
+          zoomLink: zoomMeeting.joinUrl,
+          zoomPassword: zoomMeeting.password,
+          eventType: booking.eventType,
+          className: booking.className || undefined,
+          audienceSize: booking.audienceSize || undefined,
+        });
+
+        // Mark emails as sent
+        await db
+          .update(speakerBookings)
+          .set({ emailSentAt: new Date() })
+          .where(eq(speakerBookings.id, req.params.id));
+
+      } catch (emailError: any) {
+        console.error("Email sending failed (booking already accepted):", emailError);
+        // Booking is accepted and has Zoom link, but emails failed
+        // Return success with a warning - users can still see the Zoom link
+        return res.json({
+          ...updatedBooking,
+          warning: "Booking accepted but email notifications failed. Please inform both parties manually."
+        });
+      }
 
       res.json(updatedBooking);
     } catch (error: any) {
