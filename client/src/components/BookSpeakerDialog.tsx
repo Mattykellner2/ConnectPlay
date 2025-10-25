@@ -69,7 +69,7 @@ export function BookSpeakerDialog({
       eventDescription: "",
       eventDate: "",
       eventTime: "",
-      eventDuration: 60,
+      eventDuration: 30,
       eventType: "guest-lecture",
       className: "",
       audienceSize: undefined,
@@ -231,11 +231,10 @@ export function BookSpeakerDialog({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      <SelectItem value="15">15 minutes</SelectItem>
+                      <SelectItem value="20">20 minutes</SelectItem>
                       <SelectItem value="30">30 minutes</SelectItem>
-                      <SelectItem value="45">45 minutes</SelectItem>
-                      <SelectItem value="60">60 minutes (1 hour)</SelectItem>
-                      <SelectItem value="90">90 minutes (1.5 hours)</SelectItem>
-                      <SelectItem value="120">120 minutes (2 hours)</SelectItem>
+                      <SelectItem value="40">40 minutes</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

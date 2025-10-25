@@ -85,8 +85,7 @@ export default function BecomeSpeaker() {
       location: "San Francisco, CA",
       bio: "Experienced marketing professional with 15+ years in tech industry. Passionate about digital transformation and building high-performing teams.",
       topics: ["Marketing", "Leadership", "Technology"],
-      formats: ["Virtual", "In-Person", "Workshops"],
-      feeStructure: "standard"
+      formats: ["Virtual", "In-Person", "Workshops"]
     };
     
     // Populate form with LinkedIn data
@@ -99,7 +98,6 @@ export default function BecomeSpeaker() {
     form.setValue('bio', linkedInData.bio);
     form.setValue('topics', linkedInData.topics);
     form.setValue('formats', linkedInData.formats);
-    form.setValue('feeStructure', linkedInData.feeStructure);
     
     toast({
       title: "Profile Imported",
@@ -384,30 +382,6 @@ export default function BecomeSpeaker() {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="feeStructure"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Fee Structure</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger data-testid="select-fee-structure">
-                              <SelectValue placeholder="Select fee structure" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="pro-bono">Pro Bono</SelectItem>
-                            <SelectItem value="standard">Standard Rate ($500-$1,000)</SelectItem>
-                            <SelectItem value="premium">Premium Rate ($1,000-$2,500)</SelectItem>
-                            <SelectItem value="enterprise">Enterprise Rate ($2,500+)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
                   <div className="flex gap-4">
                     <Button type="button" variant="outline" onClick={() => setStep(1)} className="flex-1" data-testid="button-back">
                       Back
@@ -416,7 +390,7 @@ export default function BecomeSpeaker() {
                       type="button" 
                       onClick={async () => {
                         // Validate step 2 fields before proceeding
-                        const isValid = await form.trigger(['topics', 'formats', 'feeStructure']);
+                        const isValid = await form.trigger(['topics', 'formats']);
                         if (isValid) {
                           setStep(3);
                         }
