@@ -12,6 +12,8 @@ interface EmailParams {
 interface BookingEmailData {
   recipientName: string;
   recipientEmail: string;
+  professorEmail: string;
+  professionalEmail: string;
   eventTitle: string;
   eventDate: string;
   eventTime: string;
