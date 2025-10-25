@@ -12,13 +12,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { insertProfessionalApplicationSchema, type InsertProfessionalApplication } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle2, Linkedin } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { z } from "zod";
 
 export default function BecomeSpeaker() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
-  const [linkedInUrl, setLinkedInUrl] = useState("");
   const { toast } = useToast();
 
   const form = useForm<InsertProfessionalApplication>({
@@ -51,59 +50,6 @@ export default function BecomeSpeaker() {
       });
     },
   });
-
-  const handleLinkedInImport = () => {
-    if (!linkedInUrl) {
-      toast({
-        title: "LinkedIn URL Required",
-        description: "Please enter your LinkedIn profile URL",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate LinkedIn URL format
-    if (!linkedInUrl.includes('linkedin.com')) {
-      toast({
-        title: "Invalid URL",
-        description: "Please enter a valid LinkedIn profile URL",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    console.log('Importing from LinkedIn URL:', linkedInUrl);
-    
-    // TODO: In production, this would call a LinkedIn API or scraping service
-    // For now, simulate LinkedIn data autofill based on URL
-    const linkedInData = {
-      name: "John Smith",
-      email: "john.smith@example.com",
-      jobTitle: "Senior Marketing Director",
-      company: "Tech Innovations Inc",
-      industry: "Technology",
-      location: "San Francisco, CA",
-      bio: "Experienced marketing professional with 15+ years in tech industry. Passionate about digital transformation and building high-performing teams.",
-      topics: ["Marketing", "Leadership", "Technology"],
-      formats: ["Virtual", "In-Person", "Workshops"]
-    };
-    
-    // Populate form with LinkedIn data
-    form.setValue('name', linkedInData.name);
-    form.setValue('email', linkedInData.email);
-    form.setValue('jobTitle', linkedInData.jobTitle);
-    form.setValue('company', linkedInData.company);
-    form.setValue('industry', linkedInData.industry);
-    form.setValue('location', linkedInData.location);
-    form.setValue('bio', linkedInData.bio);
-    form.setValue('topics', linkedInData.topics);
-    form.setValue('formats', linkedInData.formats);
-    
-    toast({
-      title: "Profile Imported",
-      description: "Your LinkedIn profile data has been imported successfully!",
-    });
-  };
 
   if (submitted) {
     return (
@@ -159,42 +105,6 @@ export default function BecomeSpeaker() {
               {step === 1 && (
                 <>
                   <h2 className="text-2xl font-semibold mb-4">Basic Information</h2>
-                  
-                  <div className="space-y-4 bg-[#0077B5]/5 p-4 rounded-lg border border-[#0077B5]/20">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Linkedin className="h-5 w-5 text-[#0077B5]" />
-                      <h3 className="font-semibold text-[#0077B5]">Quick Setup with LinkedIn</h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Paste your LinkedIn profile URL to automatically fill in your information
-                    </p>
-                    <div className="flex gap-2">
-                      <Input
-                        value={linkedInUrl}
-                        onChange={(e) => setLinkedInUrl(e.target.value)}
-                        placeholder="https://www.linkedin.com/in/yourprofile"
-                        data-testid="input-linkedin-url"
-                        className="flex-1"
-                      />
-                      <Button
-                        type="button"
-                        onClick={handleLinkedInImport}
-                        data-testid="button-linkedin-import"
-                        className="bg-[#0077B5] hover:bg-[#0077B5]/90"
-                      >
-                        Import
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t" />
-                    </div>
-                    <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-background px-2 text-muted-foreground">Or fill manually</span>
-                    </div>
-                  </div>
 
                   <FormField
                     control={form.control}
