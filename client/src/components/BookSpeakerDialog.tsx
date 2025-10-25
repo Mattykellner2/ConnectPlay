@@ -86,7 +86,7 @@ export function BookSpeakerDialog({
         // TODO: Replace with actual professor data from auth/session
         professorId: "prof-temp-id",
         professorName: "Dr. Jennifer Martinez",
-        professorEmail: "[email protected]",
+        professorEmail: "jennifer.martinez@osu.edu",
         universityId: "uni-temp-id",
         universityName: "The Ohio State University",
       });

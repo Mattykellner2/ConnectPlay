@@ -68,6 +68,7 @@ function Router() {
       {/* Speakers Dashboard with nested tab routing */}
       <Route path="/speakers/dashboard" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/speaking" component={SpeakersDashboard} />
+      <Route path="/speakers/dashboard/invitations" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/events" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/content" component={SpeakersDashboard} />
       <Route path="/speakers/dashboard/earnings" component={SpeakersDashboard} />

@@ -15,6 +15,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create a new speaker booking request
   app.post("/api/bookings", async (req, res) => {
     try {
+      console.log("Received booking request body:", JSON.stringify(req.body, null, 2));
       const validatedData = insertSpeakerBookingSchema.parse(req.body);
       
       const [booking] = await db.insert(speakerBookings).values({
@@ -25,9 +26,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(booking);
     } catch (error: any) {
       console.error("Error creating booking:", error);
+      if (error.errors) {
+        console.error("Validation errors:", JSON.stringify(error.errors, null, 2));
+      }
       res.status(400).json({ 
         error: "Failed to create booking", 
-        details: error.message 
+        details: error.message,
+        validationErrors: error.errors || undefined
       });
     }
   });

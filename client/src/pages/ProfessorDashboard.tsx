@@ -190,7 +190,7 @@ export default function ProfessorDashboard() {
                       <BookSpeakerDialog
                         professionalId={speaker.id}
                         professionalName={speaker.name}
-                        professionalEmail={`${speaker.name.toLowerCase().replace(/\s+/g, '.')}@${speaker.company.toLowerCase()}.com`}
+                        professionalEmail={`${speaker.name.toLowerCase().replace(/[.\s]+/g, '.').replace(/^\.+|\.+$/g, '')}@${speaker.company.toLowerCase()}.com`}
                       >
                         <Button size="sm" variant="default" data-testid={`button-book-speaker-${speaker.id}`}>
                           <Calendar className="h-4 w-4 mr-1" />
