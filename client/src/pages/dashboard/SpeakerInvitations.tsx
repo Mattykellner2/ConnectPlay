@@ -13,7 +13,8 @@ import type { SpeakerBooking } from "@shared/schema";
 export default function SpeakerInvitations() {
   const { toast } = useToast();
   // TODO: Replace with actual professional ID from auth/session
-  const professionalId = "prof-temp-id";
+  // Using "1" to match the first speaker ID in ProfessorDashboard mock data
+  const professionalId = "1";
 
   const { data: bookings, isLoading } = useQuery<SpeakerBooking[]>({
     queryKey: ["/api/bookings", { professionalId }],
