@@ -213,3 +213,60 @@ export const insertLeaderboardEntrySchema = createInsertSchema(leaderboardEntrie
 
 export type InsertLeaderboardEntry = z.infer<typeof insertLeaderboardEntrySchema>;
 export type LeaderboardEntry = typeof leaderboardEntries.$inferSelect;
+
+// Speaker Bookings (for Zoom + Email integration)
+export const speakerBookings = pgTable("speaker_bookings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  professionalId: varchar("professional_id").notNull(),
+  professionalName: text("professional_name").notNull(),
+  professionalEmail: text("professional_email").notNull(),
+  professorId: varchar("professor_id"),
+  professorName: text("professor_name").notNull(),
+  professorEmail: text("professor_email").notNull(),
+  universityId: varchar("university_id"),
+  universityName: text("university_name").notNull(),
+  eventTitle: text("event_title").notNull(),
+  eventDescription: text("event_description"),
+  eventDate: text("event_date").notNull(), // YYYY-MM-DD
+  eventTime: text("event_time").notNull(), // HH:MM
+  eventDuration: integer("event_duration").notNull().default(60), // minutes
+  eventType: text("event_type").notNull(), // guest-lecture, workshop, panel, ama
+  audienceSize: integer("audience_size"),
+  className: text("class_name"),
+  status: text("status").notNull().default("pending"), // pending, accepted, declined, cancelled
+  zoomMeetingId: text("zoom_meeting_id"),
+  zoomMeetingLink: text("zoom_meeting_link"),
+  zoomMeetingPassword: text("zoom_meeting_password"),
+  emailSentAt: timestamp("email_sent_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertSpeakerBookingSchema = createInsertSchema(speakerBookings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  emailSentAt: true,
+  zoomMeetingId: true,
+  zoomMeetingLink: true,
+  zoomMeetingPassword: true,
+}).extend({
+  professionalId: z.string().min(1, "Professional ID is required"),
+  professionalName: z.string().min(1, "Professional name is required"),
+  professionalEmail: z.string().email("Invalid professional email"),
+  professorName: z.string().min(1, "Professor name is required"),
+  professorEmail: z.string().email("Invalid professor email"),
+  universityName: z.string().min(1, "University name is required"),
+  eventTitle: z.string().min(1, "Event title is required"),
+  eventDescription: z.string().optional(),
+  eventDate: z.string().min(1, "Event date is required"),
+  eventTime: z.string().min(1, "Event time is required"),
+  eventDuration: z.number().min(15, "Duration must be at least 15 minutes").default(60),
+  eventType: z.string().min(1, "Event type is required"),
+  audienceSize: z.number().optional(),
+  className: z.string().optional(),
+  status: z.string().default("pending"),
+});
+
+export type InsertSpeakerBooking = z.infer<typeof insertSpeakerBookingSchema>;
+export type SpeakerBooking = typeof speakerBookings.$inferSelect;
