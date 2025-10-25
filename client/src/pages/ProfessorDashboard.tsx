@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { BookSpeakerDialog } from "@/components/BookSpeakerDialog";
 import { BookOpen, Users, Calendar, TrendingUp, Plus, UserPlus } from "lucide-react";
 import { useLocation } from "wouter";
 
@@ -180,11 +181,23 @@ export default function ProfessorDashboard() {
                     className="flex items-center justify-between p-3 rounded-lg border hover-elevate"
                     data-testid={`speaker-item-${speaker.id}`}
                   >
-                    <div>
+                    <div className="flex-1">
                       <p className="font-medium">{speaker.name}</p>
                       <p className="text-sm text-muted-foreground">{speaker.company} · {speaker.topic}</p>
                     </div>
-                    <Badge variant="outline">Connected</Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline">Connected</Badge>
+                      <BookSpeakerDialog
+                        professionalId={speaker.id}
+                        professionalName={speaker.name}
+                        professionalEmail={`${speaker.name.toLowerCase().replace(/\s+/g, '.')}@${speaker.company.toLowerCase()}.com`}
+                      >
+                        <Button size="sm" variant="default" data-testid={`button-book-speaker-${speaker.id}`}>
+                          <Calendar className="h-4 w-4 mr-1" />
+                          Book
+                        </Button>
+                      </BookSpeakerDialog>
+                    </div>
                   </div>
                 ))}
               </div>
