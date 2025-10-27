@@ -9,7 +9,7 @@ export default function Hero() {
           <div style={{ fontWeight: 800, fontSize: 48 }}>ConnectPlay</div>
         </div>
         <h1 style={{ fontSize: 'clamp(36px, 6vw, 56px)', marginBottom: 24 }}>
-          Connecting Universities with <span style={{ color: '#2563EB' }}>Industry Experts</span>
+          Connecting Universities with <span style={{ color: '#2563EB' }}>Industry Experts</span>!
         </h1>
         <p className="lead" style={{ fontSize: 18, maxWidth: 800, margin: '0 auto' }}>
           The premier platform for academic-industry partnerships. Universities manage student access, book verified guest speakers, and track engagement outcomes.
